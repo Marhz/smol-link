@@ -35,7 +35,15 @@ class UrlController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'url' => ['required', 'regex:' . $this->urlRegex()]
+        ]);
+        $data['url'] = $this->normalizeUrl($data['url']);
+        $url = Url::where('url', $data['url'])->first();
+        if(! $url){
+            $url = Url::create($data);
+        }
+        return $url;
     }
 
     /**
@@ -46,32 +54,9 @@ class UrlController extends Controller
      */
     public function show(Url $url)
     {
-        //
+        $url->increment('visits');
+        header('Location: ' . $url->url);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Url  $url
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Url $url)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Url  $url
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Url $url)
-    {
-        //
-    }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -81,5 +66,18 @@ class UrlController extends Controller
     public function destroy(Url $url)
     {
         //
+    }
+
+    protected function normalizeUrl($url)
+    {
+        $url = trim($url, '/');
+        $url = preg_replace('/^https?:\/\//', '', $url);
+        $url = preg_replace('/^www./', '', $url);
+        return $url;
+    }
+
+    protected function urlRegex()
+    {
+        return '#(((https?|ftp)://)?(\S*?\.\S*?))([\s)\[\]{},;"\':<]|\.\s|$)#i';
     }
 }
