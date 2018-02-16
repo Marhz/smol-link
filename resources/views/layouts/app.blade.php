@@ -20,11 +20,12 @@
             display: none;
         }
     </style>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 </head>
 <body>
     <div id="app">
         <b-navbar toggleable="md" type="dark" variant="info" v-cloak>
-            <b-navbar-brand href="{{ route('/') }}">Smol-l.ink</b-navbar-brand>
+            <b-navbar-brand href="/">Smol-l.ink</b-navbar-brand>
             <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
             <b-collapse is-nav id="nav_collapse">
                 <b-navbar-nav>

@@ -1,38 +1,41 @@
 <template>
     <div>
-        <div class="flex">
-            <div class="col">
-                <input @keypress.enter.prevent="submit" type="text" placeholder="Enter an url to shorten" class="" :class="error ? 'has-error' : ''" v-model="input">
+        <div class="row no-gutters">
+            <div class="col-12 col-md">
+                <input ref="test" @keypress.enter.prevent="submit" type="text" placeholder="Enter an url to shorten" class="" :class="error ? 'has-error' : ''" v-model="input">
             </div>
-            <div class="col-auto">
+            <div class="col-12 col-md-auto">
                 <button @click="submit" class="btn btn-primary" type="submit">Make smol</button>
             </div>
         </div>
-        <minifier-result v-if="hasResult" :result="result"></minifier-result>
         <div v-if="error" class="error" v-text="error.message"></div>
+        <minifier-results v-if="hasResult" :results="results"></minifier-results>
     </div>
 </template>
 
 <script>
-import minifierResult from "./MinifierResult.vue";
+import minifierResults from "./MinifierResults.vue";
 export default {
-    components: { minifierResult },
+    components: { minifierResults },
     data() {
         return {
             input: '',
             hasResult: false,
-            result: null,
+            results: [],
             error: null
         }
     },
     methods: {
         submit() {
-            this.hasResult = false;
             axios.post('url/store', {url: this.input})
                 .then(res => {
                     this.hasResult = true;
-                    this.result = res.data;
+                    this.results.push(res.data);
                     this.error = null;
+                    this.input = res.data.path
+                    this.$nextTick(() => {
+                        this.$refs.test.select();
+                    })
                 })
                 .catch(({response}) => {
                     this.error = response.data
@@ -47,14 +50,15 @@ export default {
     button {
         height: 100%;
         border-radius: 0;
-        font-size: 25px;
+        width: 100%;
+        font-size: 2rem;
     }
     input {
         border-radius: 0;
         /*line-height: 40px;*/
         width: 100%;
         padding: 10px;
-        font-size: 35px;
+        font-size: 2.3rem;
     }
     .flex div {
         padding: 0;
