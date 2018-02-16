@@ -64,8 +64,9 @@
 					this.visits = this.cachedVisits[this.period];
 				} else {
 					const { data } = await axios.get('/api/' + this.url.slug + '/visits?since=' + this.period)
-					this.visits = data;
-					this.cachedVisits[this.period] = data;
+	  				const visits = data.map(visit => moment(visit.created_at))
+					this.visits = visits;
+					this.cachedVisits[this.period] = visits;
 				}
 				this.fillData();
 			}
@@ -84,28 +85,26 @@
 		},
 	  	computed: {
 	  		visitsFormatted() {
-	  			let visits = this.visits.map(visit => moment(visit.created_at))
-	  			visits = visits.reduce((acc, visit) => {
+	  			const visits = this.visits.reduce((acc, visit) => {
 	  				let format = visit[this.durationConfig.visitsFormattingFunc]();
 	  				if (Object.keys(acc).includes(format.toString())) {
-	  					acc[format] = acc[format] + 1;
+	  					acc[format]++;
 	  				} else {
 	  					acc[format] = 1;
 	  				}
 	  				return acc;
 	  			}, {});
-	  			return this.labels.map(label => {
-	  				if (Object.keys(visits).includes(label.toString()))
-	  					return visits[label]
-	  				return 0
-	  			})
+	  			return this.labels.map(label => (Object.keys(visits).includes(label.toString())) ? visits[label] : 0)
 	  		},
 	  		labels() {
-	  			const arr = [];
-	  			for (let i = 0; i < this.durationConfig.labelsCount; i++) {
-	  				arr.push(this.durationConfig.labelsPush(i));
-	  			}
-	  			return arr.reverse();
+	  			return new Array(this.durationConfig.labelsCount).fill(null)
+	  				.map((label, i) => this.durationConfig.labelsPush(i))
+	  				.reverse();
+	  			// const arr = [];
+	  			// for (let i = 0; i < this.durationConfig.labelsCount; i++) {
+	  			// 	arr.push(this.durationConfig.labelsPush(i));
+	  			// }
+	  			// return arr.reverse();
 	  		},
 	  		durationConfig() {
 	  			return this.periodData[this.period];

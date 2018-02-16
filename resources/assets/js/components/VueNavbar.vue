@@ -1,38 +1,9 @@
 <script>
-	// import { bCollapse, VBCollapse } from 'bootstrap-vue';
+	import bNavbar from 'bootstrap-vue/es/components/navbar/navbar';
+	import bNavbarToggle from 'bootstrap-vue/es/components/navbar/navbar-toggle';
+
 	export default {
-		// components: { bCollapse },
-		data() {
-			return {
-				show: false,
-				showing: false
-			}
-		},
-		methods: {
-			toggle() {
-				this.show = ! this.show;
-				this.showing = ! this.showing;
-				setTimeout(() => this.showing = ! this.showing, 1000);
-			}
-		},
-		computed: {
-			btnClass() {
-				return (! this.show) ? 'collapsed' : ''
-			},
-			navbarClass() {
-				// return (this.show) ? 'show' : ''
-				if (this.show && ! this.showing) {
-					return 'show'
-				} else if (this.showing) {
-					return 'collapsing h'
-				} else {
-					return '';
-				}
-			},
-			loaded() {
-				return "show";
-			}
-		}
+		components: { bNavbar, bNavbarToggle },
 	}
 </script>
  <style>
