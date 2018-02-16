@@ -2,7 +2,7 @@
     <div>
         <div class="flex">
             <div class="col">
-                <input type="text" placeholder="Enter an url to shorten" class="" :class="error ? 'has-error' : ''" v-model="input">
+                <input @keypress.enter.prevent="submit" type="text" placeholder="Enter an url to shorten" class="" :class="error ? 'has-error' : ''" v-model="input">
             </div>
             <div class="col-auto">
                 <button @click="submit" class="btn btn-primary" type="submit">Make smol</button>

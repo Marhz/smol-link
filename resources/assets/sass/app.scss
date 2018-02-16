@@ -8,7 +8,15 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-.navbar-laravel {
-  background-color: #fff;
+.navbar{
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: white;
+  &-brand {
+  	font-size: 1.4rem;
+  }
+}
+.navbar-nav .nav-item .nav-link {
+	color: rgba(255, 255, 255, .85);
 }

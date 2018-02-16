@@ -3,8 +3,9 @@
 		<p v-text="result.url"></p>
 		<div class="result-infos">
 			<span class="" v-text="result.path"></span>
-			<button class="copy btn btn-success" @click="copy">Copy</button>
-			<span class="visits">{{result.visits}} visits</span>
+			<!-- <button class="copy btn btn-success" @click="copy">Copy</button> -->
+			<v-copy :data="result.path" class="copy"></v-copy>
+			<span class="visits">{{result.visits_count}} visits</span>
 		</div>
 	</div>
 </template>
@@ -12,16 +13,16 @@
 <script>
 	export default {
 		props: ['result'],
-		methods: {
-			copy() {
-				const tmp = document.createElement('input');
-				document.body.appendChild(tmp);
-				tmp.value = this.result.path;
-				tmp.select();
-				document.execCommand('copy');
-				tmp.remove()
-			}
-		}
+		// methods: {
+		// 	copy() {
+		// 		const tmp = document.createElement('input');
+		// 		document.body.appendChild(tmp);
+		// 		tmp.value = this.result.path;
+		// 		tmp.select();
+		// 		document.execCommand('copy');
+		// 		tmp.remove()
+		// 	}
+		// }
 	}
 </script>
 

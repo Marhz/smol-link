@@ -46,9 +46,9 @@ class UrlTest extends TestCase
     function it_increments_the_number_of_visits_when_a_link_is_visited()
     {
         $url = factory('App\Url')->create();
-        $this->assertEquals(0, $url->visits);
+        $this->assertEquals(0, $url->visits_count);
         $this->get(route('url.show', ['url' => $url->slug]));
-        $this->assertEquals(1, $url->fresh()->visits);
+        $this->assertEquals(1, $url->fresh()->visits_count);
     }
 
     /**
@@ -60,5 +60,23 @@ class UrlTest extends TestCase
         $this->post(route('url.store', ['url' => $url]));
         $generatedUrl = Url::first();
         $this->assertEquals("example.com", $generatedUrl->url);
+    }
+
+    /**
+     * @test
+     */
+    function it_gets_visits_for_a_given_timeframe()
+    {
+        $url = factory('App\Url')->create();
+        for ($i = 0; $i < 100; $i++) {
+            $date = \Carbon\Carbon::now()->subDays(rand(0, 6));
+            $url->visits()->create(['created_at' => $date]);
+        }
+        for ($i = 0; $i < 100; $i++) {
+            $date = \Carbon\Carbon::now()->subWeeks(rand(3, 50));
+            $url->visits()->create(['created_at' => $date]);
+        }
+        $res = $this->getJson('api/' . $url->slug . '/visits?since=week');
+        $this->assertCount(100, $res->json());
     }
 }

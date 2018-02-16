@@ -12,12 +12,28 @@
 */
 
 Route::get('/', function () {
+	// $u = App\Url::first();
+	// for ($i = 0; $i < 100; $i++) {
+	// 	$date = carbon\carbon::now()->subdays(rand(0, 6));
+	// 	$u->visits()->create(['created_at' => $date]);
+	// }
+	// for ($i = 0; $i < 100; $i++) {
+	// 	$date = carbon\carbon::now()->subWeeks(rand(3, 20));
+	// 	$u->visits()->create(['created_at' => $date]);
+	// }
+	// echo $u->visits_count;
+	// echo $u->visits_count;
+	// echo $u->visits_count;
     return view('welcome');
 });
 
+Auth::routes();
+
+Route::get('/{url}/stats', 'StatsController@show')->name('url.show');
 Route::get('/{url}', 'UrlController@show')->name('url.show');
 Route::post('url/store', 'UrlController@store')->name('url.store');
 
-Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/api/{url}/visits', 'StatsController@getVisits');

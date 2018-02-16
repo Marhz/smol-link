@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Url;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class UrlController extends Controller
 {
@@ -13,16 +14,6 @@ class UrlController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
     {
         //
     }
@@ -54,8 +45,8 @@ class UrlController extends Controller
      */
     public function show(Url $url)
     {
-        $url->increment('visits');
-        header('Location: ' . $url->url);
+        $url->visits()->create();
+        return redirect()->to('http://' . $url->url);
     }
     /**
      * Remove the specified resource from storage.
@@ -78,6 +69,6 @@ class UrlController extends Controller
 
     protected function urlRegex()
     {
-        return '#(((https?|ftp)://)?(\S*?\.\S*?))([\s)\[\]{},;"\':<]|\.\s|$)#i';
+        return '#^(((https?|ftp)://)?(\S*?\.\S*?))([\s)\[\]{},;"\':<]|\.\s|$)#i';
     }
 }

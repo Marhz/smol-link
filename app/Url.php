@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Url extends Model
 {
     protected $guarded = [];
-    protected $appends = ['path'];
+    protected $appends = ['path', 'visits_count'];
 
     public static function boot()
     {
@@ -25,13 +25,18 @@ class Url extends Model
 
     public function getPathAttribute()
     {
-    	return $this->attributes['path'] = route('url.show', ['url' => $this->slug]);
+    	return route('url.show', ['url' => $this->slug]);
     }
 
-    public function save(array $options = [])
+    public function getVisitsCountAttribute()
     {
-    	parent::save($options);
-    	$this->visits = 0;
+    	return isset($this->attributes['visits_count'])
+    		? $this->attributes['visits_count'] : $this->attributes['visits_count'] = $this->visits()->count();
+    }
+
+    public function visits()
+    {
+    	return $this->hasMany(Visit::class);
     }
 
     protected function makeSlug()
