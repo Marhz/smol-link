@@ -1,15 +1,16 @@
 <template>
 <div class="graphc">
-	<select v-model="period" class="form-control">
+<!-- 	<select v-model="period" class="form-control" @change="$emit('newPeriod', period)">
 		<option value="day">Last day</option>
 		<option value="week">Last 7 days</option>
 		<option value="month">Last 30 days</option>
 		<option value="year">Last Year</option>
 	</select>
-	<visits-graph
+ -->	<visits-graph
 		:visits="visits"
 		:options="options"
 		:chart-data="chartData"
+		:height="300"
 	></visits-graph>
 </div>
 </template>
@@ -20,12 +21,19 @@
 
 	export default {
 		components: { VisitsGraph },
-		props: ['url', "options"],
+		props: {
+			url: Object,
+			options: Object,
+			period: String,
+			visits: {
+				type: Array,
+				default: []
+			}
+		},
 		data() {
 			return {
-				period: "",
 				chartData: null,
-				visits: [],
+				// visits: [],
 				cachedVisits: {},
 				periodData: {
 					day: {
@@ -55,28 +63,29 @@
 				}
 			}
 		},
-		mounted() {
-			this.period = "day";
-		},
 		watch: {
-			period: async function() {
-				if (Object.keys(this.cachedVisits).includes(this.period)) {
-					this.visits = this.cachedVisits[this.period];
-				} else {
-					const { data } = await axios.get('/api/' + this.url.slug + '/visits?since=' + this.period)
-	  				const visits = data.map(visit => moment(visit.created_at))
-					this.visits = visits;
-					this.cachedVisits[this.period] = visits;
-				}
+			visits: function() {
 				this.fillData();
-			}
+			},
+			// period: async function() {
+				// this.$emit('newPeriod', this.period);
+				// if (Object.keys(this.cachedVisits).includes(this.period)) {
+				// 	this.visits = this.cachedVisits[this.period];
+				// } else {
+				// 	const { data } = await axios.get('/api/' + this.url.slug + '/visits?since=' + this.period)
+	  	// 			const visits = data.map(visit => moment(visit.created_at))
+				// 	this.visits = visits;
+				// 	this.cachedVisits[this.period] = visits;
+				// }
+				// this.fillData();
+			// },
 		},
 		methods: {
 			fillData() {
 				this.chartData = {
 			    	labels: this.durationConfig.labelsDisplayFunc(this.labels),
 			      	datasets: [{
-						label: this.visits.length + ' Visits',
+						label: 'Visits',
 			          	backgroundColor: '#f87979',
 			          	data: this.visitsFormatted
 			        }]
@@ -86,6 +95,7 @@
 	  	computed: {
 	  		visitsFormatted() {
 	  			const visits = this.visits.reduce((acc, visit) => {
+	  				visit = moment(visit.created_at);
 	  				let format = visit[this.durationConfig.visitsFormattingFunc]();
 	  				if (Object.keys(acc).includes(format.toString())) {
 	  					acc[format]++;
@@ -115,5 +125,7 @@
 
 <style>
 	.graphc {
+		position: relative;
+		/*max-height: 200px;*/
 	}
 </style>

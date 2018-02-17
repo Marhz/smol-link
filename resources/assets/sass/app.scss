@@ -20,3 +20,28 @@
 .navbar-nav .nav-item .nav-link {
 	color: rgba(255, 255, 255, .85);
 }
+
+.dashboard {
+	.infos {
+		background: yellow;
+		height: 50px;
+	}
+	.links-list {
+		background: #cfcfcf;
+		a {
+			color: inherit;
+			text-decoration: none;
+		}
+		.url-overview {
+			padding: 15px;
+			border-bottom: 1px solid #888;
+			&.selected {
+				background: white;
+			}
+		}
+	}
+	.link-info {
+		background: white;
+	}
+
+}

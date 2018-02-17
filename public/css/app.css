@@ -10010,3 +10010,30 @@ a.text-dark:focus {
   color: rgba(255, 255, 255, 0.85);
 }
 
+.dashboard .infos {
+  background: yellow;
+  height: 50px;
+}
+
+.dashboard .links-list {
+  background: #cfcfcf;
+}
+
+.dashboard .links-list a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.dashboard .links-list .url-overview {
+  padding: 15px;
+  border-bottom: 1px solid #888;
+}
+
+.dashboard .links-list .url-overview.selected {
+  background: white;
+}
+
+.dashboard .link-info {
+  background: white;
+}
+

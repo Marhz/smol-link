@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ProfileController extends Controller
+class DashboardController extends Controller
 {
+
 	public function __construct()
 	{
 		$this->middleware('auth');
@@ -16,6 +17,6 @@ class ProfileController extends Controller
     	$user = auth()->user()->load(['urls' => function($query) {
     		$query->withCount('visits');
     	}]);
-    	return view('profile.show', compact('user'));
+    	return view('dashboard.show', compact('user'));
     }
 }

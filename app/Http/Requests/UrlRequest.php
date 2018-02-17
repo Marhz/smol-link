@@ -29,12 +29,24 @@ class UrlRequest extends FormRequest
             'label' => ['max:255'],
         ];
         if ($this->isMethod('put'))
-            $rules['slug'] = [Rule::unique('urls', 'slug')->ignore($this->route('url')->id)];
+            $rules['slug'] = [
+                Rule::unique('urls', 'slug')->ignore($this->route('url')->id),
+                Rule::notIn($this->reservedNames())
+            ];
         return $rules;
     }
 
     protected function urlRegex()
     {
         return '#^(((https?|ftp)://)?(\S*?\.\S*?))([\s)\[\]{},;"\':<]|\.\s|$)#i';
+    }
+
+    protected function reservedNames() {
+        return [
+            'dashboard',
+            'login',
+            'logout',
+            'register'
+        ];
     }
 }
