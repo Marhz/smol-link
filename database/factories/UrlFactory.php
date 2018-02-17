@@ -9,7 +9,7 @@ $factory->define(App\Url::class, function (Faker $faker) {
         $slug .= $base->random();
     }
     return [
-        'url' => $faker->url,
+        'url' => trim(preg_replace('/^www./', '', preg_replace('/^https?:\/\//', '', $faker->url)), '/'),
         'slug' => $slug
     ];
 });

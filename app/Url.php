@@ -8,6 +8,9 @@ class Url extends Model
 {
     protected $guarded = [];
     protected $appends = ['path', 'visits_count'];
+    protected $casts = [
+        'user_id' => 'integer'
+    ];
 
     public static function boot()
     {
@@ -37,6 +40,11 @@ class Url extends Model
     public function visits()
     {
     	return $this->hasMany(Visit::class);
+    }
+
+    public function isPrivate()
+    {
+        return ! ($this->user_id === null);
     }
 
     protected function makeSlug()

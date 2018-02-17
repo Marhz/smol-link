@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Url;
 use Illuminate\Http\Request;
+use App\Http\Requests\UrlRequest;
 use Illuminate\Support\Facades\Redirect;
 
 class UrlController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->only('update');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -24,14 +29,17 @@ class UrlController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(UrlRequest $request)
     {
-        $data = $request->validate([
-            'url' => ['required', 'regex:' . $this->urlRegex()]
-        ]);
+        $data = $request->only('url');
         $data['url'] = $this->normalizeUrl($data['url']);
-        $url = Url::where('url', $data['url'])->first();
-        if(! $url){
+        if(auth()->guest()) {
+            $url = Url::where('url', $data['url'])->first();
+            if(!$url) {
+                $url = Url::create($data);
+            }
+        } else {
+            $data['user_id'] = auth()->id();
             $url = Url::create($data);
         }
         return $url;
@@ -47,6 +55,16 @@ class UrlController extends Controller
     {
         $url->visits()->create();
         return redirect()->to('http://' . $url->url);
+    }
+
+    public function update(UrlRequest $request, Url $url)
+    {
+        $this->authorize('update', $url);
+        $data = $request->only(['url', 'label', 'slug']);
+        // if($request->has('slug'))
+            // dd($data);
+        $url->update($data);
+        return $url;
     }
     /**
      * Remove the specified resource from storage.
@@ -65,10 +83,5 @@ class UrlController extends Controller
         $url = preg_replace('/^https?:\/\//', '', $url);
         $url = preg_replace('/^www./', '', $url);
         return $url;
-    }
-
-    protected function urlRegex()
-    {
-        return '#^(((https?|ftp)://)?(\S*?\.\S*?))([\s)\[\]{},;"\':<]|\.\s|$)#i';
     }
 }

@@ -29,11 +29,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/{url}/stats', 'StatsController@show')->name('url.show');
-Route::get('/{url}', 'UrlController@show')->name('url.show');
+Route::get('/{url}/stats', 'StatsController@show')->name('url.stats');
 Route::post('url/store', 'UrlController@store')->name('url.store');
-
-
+Route::get('/profile', 'ProfileController@show')->name('profile.show');
+Route::get('/{url}', 'UrlController@show')->name('url.show');
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/api/{url}/visits', 'StatsController@getVisits');
+Route::get('/api/{url}/visits', 'StatsController@getVisits')->name('api.url.stats');
+Route::put('/api/{url}/update', 'UrlController@update')->name('url.update');

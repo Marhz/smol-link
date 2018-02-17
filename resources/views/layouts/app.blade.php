@@ -40,8 +40,13 @@
                             <template slot="button-content">
                                 <span>User</span>
                             </template>
-                            <b-dropdown-item href="#">Profile</b-dropdown-item>
-                            <b-dropdown-item href="#">Signout</b-dropdown-item>
+                            <b-dropdown-item href="/profile">Profile</b-dropdown-item>
+                            <b-dropdown-item href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Logout
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </b-dropdown-item>
                         </b-nav-item-dropdown>
                     @endguest
                 </b-navbar-nav>
