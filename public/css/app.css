@@ -9999,7 +9999,7 @@ a.text-dark:focus {
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
   font-size: 1.4rem;
   font-weight: 600;
-  color: white;
+  color: test;
 }
 
 .navbar-brand {

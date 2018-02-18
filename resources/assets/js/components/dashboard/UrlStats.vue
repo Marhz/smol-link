@@ -17,7 +17,7 @@
 			</div>
 			<div class="form-group">
 				<label for="slug">Slug :</label>
-				<input type="text" id="slug"v-model="editUrl.slug"/>
+				<input type="text" id="slug" v-model="editUrl.slug"/>
 			</div>
 			<button @click="submit" class="btn btn-primary">Save</button>
 		</div>

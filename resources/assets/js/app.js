@@ -15,6 +15,7 @@ Vue.component('minifier-input', require('./components/MinifierInput.vue'));
 Vue.component('visits-graph-container', require('./components/VisitsGraphContainer.vue'));
 Vue.component('v-copy', require('./components/VCopy.vue'));
 Vue.component('vue-navbar', require('./components/VueNavbar.vue'));
+Vue.component('public-stats', require('./components/PublicStats.vue'));
 
 
 const routes = [

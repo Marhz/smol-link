@@ -34,7 +34,7 @@ class UrlController extends Controller
         $data = $request->only('url');
         $data['url'] = $this->normalizeUrl($data['url']);
         if(auth()->guest()) {
-            $url = Url::where('url', $data['url'])->first();
+            $url = Url::where('url', $data['url'])->where('user_id', null)->first();
             if(!$url) {
                 $url = Url::create($data);
             }

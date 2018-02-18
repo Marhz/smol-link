@@ -26,7 +26,6 @@
 		data() {
 			return {
 				why: [],
-				cachedVisits: {},
 				periodData: {
 					day: {
 						visitsFormattingFunc: "hour",
@@ -49,7 +48,7 @@
 					year: {
 						visitsFormattingFunc: "month",
 						labelsCount: 12,
-						labelsDisplayFunc: (labels) => labels.map(l => l + 1),
+						labelsDisplayFunc: (labels) => labels.map((l, i) => moment(i + 1, 'MM').format('MMMM')),
 						labelsPush: (i) => moment().subtract(i, 'months').month()
 					}
 				}
