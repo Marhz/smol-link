@@ -14,9 +14,14 @@ class DashboardController extends Controller
 
     public function show()
     {
-    	$user = auth()->user()->load(['urls' => function($query) {
-    		$query->withCount('visits');
-    	}]);
+    	$user = auth()->user();
     	return view('dashboard.show', compact('user'));
+    }
+
+    public function getUrls()
+    {
+    	return auth()->user()->load(['urls' => function($query) {
+    		$query->withCount('visits');
+    	}])->urls;
     }
 }

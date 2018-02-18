@@ -1,17 +1,11 @@
 <template>
 <div class="graphc">
-<!-- 	<select v-model="period" class="form-control" @change="$emit('newPeriod', period)">
-		<option value="day">Last day</option>
-		<option value="week">Last 7 days</option>
-		<option value="month">Last 30 days</option>
-		<option value="year">Last Year</option>
-	</select>
- -->	<visits-graph
+ 	<visits-graph
 		:visits="visits"
 		:options="options"
-		:chart-data="chartData"
-		:height="300"
-	></visits-graph>
+		:chart-data="why"
+		:height="400"
+	/>
 </div>
 </template>
 
@@ -22,18 +16,16 @@
 	export default {
 		components: { VisitsGraph },
 		props: {
-			url: Object,
 			options: Object,
 			period: String,
 			visits: {
 				type: Array,
-				default: []
+				default: () => []
 			}
 		},
 		data() {
 			return {
-				chartData: null,
-				// visits: [],
+				why: [],
 				cachedVisits: {},
 				periodData: {
 					day: {
@@ -65,24 +57,13 @@
 		},
 		watch: {
 			visits: function() {
-				this.fillData();
-			},
-			// period: async function() {
-				// this.$emit('newPeriod', this.period);
-				// if (Object.keys(this.cachedVisits).includes(this.period)) {
-				// 	this.visits = this.cachedVisits[this.period];
-				// } else {
-				// 	const { data } = await axios.get('/api/' + this.url.slug + '/visits?since=' + this.period)
-	  	// 			const visits = data.map(visit => moment(visit.created_at))
-				// 	this.visits = visits;
-				// 	this.cachedVisits[this.period] = visits;
-				// }
 				// this.fillData();
-			// },
+				this.why = this.chartData
+			},
 		},
-		methods: {
-			fillData() {
-				this.chartData = {
+	  	computed: {
+			chartData() {
+				return {
 			    	labels: this.durationConfig.labelsDisplayFunc(this.labels),
 			      	datasets: [{
 						label: 'Visits',
@@ -91,8 +72,6 @@
 			        }]
 			    }
 			},
-		},
-	  	computed: {
 	  		visitsFormatted() {
 	  			const visits = this.visits.reduce((acc, visit) => {
 	  				visit = moment(visit.created_at);
@@ -110,11 +89,6 @@
 	  			return new Array(this.durationConfig.labelsCount).fill(null)
 	  				.map((label, i) => this.durationConfig.labelsPush(i))
 	  				.reverse();
-	  			// const arr = [];
-	  			// for (let i = 0; i < this.durationConfig.labelsCount; i++) {
-	  			// 	arr.push(this.durationConfig.labelsPush(i));
-	  			// }
-	  			// return arr.reverse();
 	  		},
 	  		durationConfig() {
 	  			return this.periodData[this.period];

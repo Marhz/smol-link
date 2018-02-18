@@ -10034,6 +10034,32 @@ a.text-dark:focus {
 }
 
 .dashboard .link-info {
+  word-break: break-all;
   background: white;
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+.dashboard .link-info .close-btn {
+  font-size: 2rem;
+  background: none;
+  border: none;
+  padding: 0 10px;
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard .link-info {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+
+  .dashboard .link-info h1 {
+    font-size: 1.4rem;
+  }
 }
 

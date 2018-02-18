@@ -24,14 +24,20 @@ class UrlRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'url' => ['required', 'regex:' . $this->urlRegex()],
-            'label' => ['max:255'],
-        ];
-        if ($this->isMethod('put'))
-            $rules['slug'] = [
-                Rule::unique('urls', 'slug')->ignore($this->route('url')->id),
-                Rule::notIn($this->reservedNames())
+        if ($this->isMethod('post')) {
+            $rules = [
+                'url' => ['required', 'regex:' . $this->urlRegex()],
+                'label' => ['max:255'],
+          ];
+        }
+        else if ($this->isMethod('put'))
+            $rules = [
+                'label' => ['max:255'],
+                'slug' => [
+                    'required',
+                    Rule::unique('urls', 'slug')->ignore($this->route('url')->id),
+                    Rule::notIn($this->reservedNames())
+                ]
             ];
         return $rules;
     }
