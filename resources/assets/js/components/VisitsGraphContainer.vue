@@ -30,7 +30,7 @@
 					day: {
 						visitsFormattingFunc: "hour",
 						labelsCount: 24,
-						labelsDisplayFunc: (labels) =>  labels.map(l => l + "h"),
+						labelsDisplayFunc: (labels) =>  labels.map(l => (l.toString().length > 1) ? `${l}h` : `0${l}h`),
 						labelsPush: (i) => moment().subtract(i, 'hours').hour()
 					},
 					week: {
@@ -51,6 +51,7 @@
 						labelsDisplayFunc: (labels) => labels.map((l, i) => moment(i + 1, 'MM').format('MMMM')),
 						labelsPush: (i) => moment().subtract(i, 'months').month()
 					}
+
 				}
 			}
 		},
