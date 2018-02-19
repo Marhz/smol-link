@@ -1,25 +1,34 @@
 <template>
-	<div style="position: relative;">
-		<div class="d-flex justify-content-end pb-1" v-if="smallscreen">
-			<button type="button" @click="$emit('close')" class="close-btn" aria-label="Close">
+	<div>
+		<div class="pb-1 close-btn">
+			<button type="button" @click="$emit('close')" aria-label="Close">
 				<span aria-hidden="true"><i class="fa fa-times"></i></span>
 			</button>
 		</div>
-		<div class="d-flex align-items-center">
-			<h1>{{ url.path }}</h1>
-			<button class="ml-1 btn btn-outline-warning btn-xs" @click="edit">Edit</button>
-			<button class="ml-1 btn btn-outline btn-xs" @click="cancel" v-if="editing">Cancel</button>
+		<div class="d-flex flex-column link-info">
+			<h1>{{ url.label }}</h1>
+			<div class="d-flex align-items-center">
+				<span class="mr-3">{{ url.path }}</span> 
+				<v-copy :data="url.path"/>
+			</div>
+			<div>{{ url.url }}</div>
+			<!-- <button class="ml-1 btn btn-outline-warning btn-xs" @click="edit">Edit</button>
+			<button class="ml-1 btn btn-outline btn-xs" @click="cancel" v-if="editing">Cancel</button> -->
 		</div>
 		<div v-if="editing">
-			<div class="form-group">
-				<label for="label">Label :</label>
-				<input type="text" id="label" v-model="editUrl.label"/>
+			<div class="row no-gutters">
+				<div class="form-group col-md-6 col-12 pr-md-3">
+					<label for="slug" class="w-100">Slug :</label>
+					<input type="text" id="slug" class="form-control" v-model="editUrl.slug"/>
+				</div>
+				<div class="form-group col-12 col-md-6 pl-md-3">
+					<label for="label" class="w-100">Label :</label>
+					<input type="text" id="label" class="form-control" v-model="editUrl.label"/>
+				</div>
+				<div class="col form-group">
+					<button @click="submit" class="btn btn-primary float-right">Save</button>
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="slug">Slug :</label>
-				<input type="text" id="slug" v-model="editUrl.slug"/>
-			</div>
-			<button @click="submit" class="btn btn-primary">Save</button>
 		</div>
 		<period-select :period="period" @newPeriod="newPeriod" />
 		<div class="graph-container">
@@ -29,7 +38,7 @@
 				:period="period"
 			/>
 		</div>
-		<div style="background: red; height: 500px; width: 100%;"></div>
+		<!-- <div style="height: 500px; background: red;"></div> -->
  	</div>
 </template>
 
@@ -41,12 +50,12 @@ export default {
 	components: {
 		PeriodSelect
 	},
-	props: ['url', 'smallscreen'],
+	props: ['url', 'smallScreen'],
 
 	data() {
 		return {
 			period: 'day',
-			editing: false,
+			editing: true,
 			editUrl: {
 				slug: '',
 				label: ''
@@ -102,7 +111,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 	.graph-container {
 		/*height: 200px;*/
 		position: relative;

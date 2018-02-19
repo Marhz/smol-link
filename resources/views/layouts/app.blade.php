@@ -42,7 +42,7 @@
                     @else
                         <b-nav-item-dropdown right>
                             <template slot="button-content">
-                                <span>User</span>
+                                <span>{{ auth()->user()->name }}</span>
                             </template>
                             <b-dropdown-item href="/profile">Profile</b-dropdown-item>
                             <b-dropdown-item href="/logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -61,7 +61,6 @@
             @yield('content')
         </main>
     </div>
-
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 </body>

@@ -1,18 +1,23 @@
 <template>
 	<div class="container-fluid dashboard">
-		<div class="row no-gutters">
-			<div class="col-12 infos">
-				{{ user.email }}
-			</div>
-		</div>
-		<div class="row no-gutters">
-			<div class="col-12 col-md-4 links-list">
-				<url-overview :url="url" :selectedUrl="selectedUrl" v-for="url in urls" :key="url.id" @open="showStats = true"/>
-			</div>
-			<div class="col-md-8 col-12 link-info" v-show='showStats'>
+        <div class="row no-gutters">
+            <div class="col-12 col-md">
+                <input ref="test" @keypress.enter.prevent="submit" type="text" placeholder="Enter an url to shorten" class="" :class="error ? 'has-error' : ''" v-model="input">
+            </div>
+            <div class="d-none d-md-flex col-md-auto">
+                <button @click="submit" class="btn btn-primary" type="submit">Make smol</button>
+            </div>
+        </div>
+		<div class="row no-gutters" :style="urlContainerHeight" ref="urlsContainer">
+			<url-overview 
+				:urls="urls" 
+				:selectedUrl="selectedUrl" 
+				@open="showStats = true"
+			/>
+			<div class="col-md-8 col-12 link-view" :style="urlContainerHeight" ref="info" v-show='showStats'>
 				<router-view
 					:url="selectedUrl"
-					:smallscreen="smallScreen"
+					:small-screen="smallScreen"
 					@close="showStats = false"
 					@updateUrl="updateUrl"
 					v-if="selectedUrl !== undefined"
@@ -25,6 +30,7 @@
 <script>
 import UrlOverview from './UrlOverview.vue';
 import { mapGetters } from 'vuex';
+import debounce from 'lodash/debounce';
 
 export default {
 	components: {
@@ -33,13 +39,30 @@ export default {
 	props: ['user'],
 	data() {
 		return {
-			showStats: window.innerWidth >= 768 || this.$route.params.slug.length > 0
+			showStats: true,
+			input: '',
+			smallScreen: (window.innerWidth <= 768)
 		}
 	},
 	mounted() {
+		window.addEventListener('resize', debounce(this.setElemsHeight, 100))
+		this.setElemsHeight();
 		this.$store.dispatch('getUrls');
 	},
+	beforeDestroy() {
+		window.removeEventListener('resize', this.setElemsHeight)
+	},
 	methods: {
+		setElemsHeight() {
+			this.smallScreen = (window.innerWidth <= 768);
+			this.$refs.urlsContainer.style.height = (window.innerHeight - this.$refs.urlsContainer.offsetTop - this.$refs.urlsContainer.firstChild.firstChild.clientHeight) + "px"
+			this.showStats = this.smallScreen || this.$route.params.slug.length > 0;
+			if (this.smallScreen && this.$refs.info.style.height !== "100%") {
+				this.$refs.info.style.height = "100%"
+			} else {
+				this.$refs.info.style.height = (window.innerHeight - this.$refs.urlsContainer.offsetTop) + "px";
+			}
+		},
 		selectUrl(url) {
 			// this.selectedUrl = url
 		},
@@ -47,6 +70,15 @@ export default {
 			const url = this.urls.find(url => url.slug === slug)
 			url.label = newUrl.label;
 			url.slug = newUrl.slug;
+		},
+		submit() {
+			this.$store.dispatch('pushUrl', this.input).then(() => {
+				console.log(this.urls[0].slug);
+				this.$router.push(this.urls[0].slug);
+			});
+		},
+		error() {
+
 		}
 	},
 	computed:{
@@ -59,8 +91,11 @@ export default {
 			console.log(url);
 			return url;
 		},
-		smallScreen() {
-			return (window.innerWidth <= 768);
+		urlContainerHeight() {
+			// return {color: 'red'};
+			// console.log(this.$refs);
+			// return { height: (window.innerHeight - this.$refs.urlsContainer.offsetTop) + "px" };
+				
 		}
 	}
 }
@@ -69,5 +104,19 @@ export default {
 <style scoped>
 	.container-fluid {
 		padding: 0;
+		height: 100%;
 	}
+	    button {
+        height: 100%;
+        border-radius: 0;
+        width: 100%;
+        font-size: 2rem;
+    }
+    input {
+        border-radius: 0;
+        /*line-height: 40px;*/
+        width: 100%;
+        padding: 10px;
+        font-size: 2.3rem;
+    }
 </style>

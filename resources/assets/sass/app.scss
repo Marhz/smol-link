@@ -12,7 +12,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
   font-size: 1.4rem;
   font-weight: 600;
-  color: test;
   &-brand {
   	font-size: 1.4rem;
   }
@@ -26,6 +25,13 @@
 	.infos {
 		background: yellow;
 		height: 50px;
+	}
+	.links-list-controls {
+		padding: 10px;
+		background: #eee;
+		span {
+			white-space: nowrap;
+		}
 	}
 	.links-list {
 		background: #cfcfcf;
@@ -41,24 +47,36 @@
 			}
 		}
 	}
-	.link-info {
+	.link-view {
+
+		.link-info {
+			font-size: 2rem;
+		}
+		overflow-y: scroll;
 		word-break: break-all;
 		background: white;
 		padding: 10px;
 		width: 100%;
 		height: 100%;
 		.close-btn {
-			font-size: 2rem;
-			background: none;
-			border: none;
-			padding: 0 10px;
+			justify-content: flex-end;
+			display: none;
+			button {
+				font-size: 2rem;
+				background: none;
+				border: none;
+				padding: 0 10px;
+			}
+			@media screen and (max-width: 768px) {
+				display: flex;
+			}
 		}
 		@media screen and (max-width: 768px) {
 			h1 {
 				font-size: 1.4rem;
 			}
-			position: absolute;
-			height: 100%;
+			position: fixed;
+			height: 100vh;
 			top: 0;
 			left: 0;
 			bottom: 0;
@@ -66,4 +84,29 @@
 		}
 	}
 
+}
+
+.overflow-scroll {
+	object-fit: cover;
+	overflow-y: scroll;
+	height: 100%;
+}
+
+// app {
+// 	height: 100vh;
+// 	display: flex;
+// 	flex-direction: column;
+// 	main {
+// 		flex: 1 1 auto;
+// 	}
+// 	.footer {
+// 		// flex: 0 1 40px;
+// 		height: 40px;
+// 		background: red;
+// 	}
+// }
+
+nav {
+	flex: 0 1 auto;
+	min-height: 60px;
 }

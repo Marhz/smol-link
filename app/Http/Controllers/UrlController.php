@@ -32,16 +32,16 @@ class UrlController extends Controller
     public function store(UrlRequest $request)
     {
         $data = $request->only('url');
-        $data['url'] = $this->normalizeUrl($data['url']);
         if(auth()->guest()) {
+            $data['url'] = $this->normalizeUrl($data['url']);
             $url = Url::where('url', $data['url'])->where('user_id', null)->first();
             if(!$url) {
                 $url = Url::create($data);
             }
-        } else {
-            $data['user_id'] = auth()->id();
-            $url = Url::create($data);
-        }
+            return $url;
+        } 
+        $data['user_id'] = auth()->id();
+        $url = Url::create($data);
         return $url;
     }
 

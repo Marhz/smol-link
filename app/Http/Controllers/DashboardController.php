@@ -21,7 +21,7 @@ class DashboardController extends Controller
     public function getUrls()
     {
     	return auth()->user()->load(['urls' => function($query) {
-    		$query->withCount('visits');
+    		$query->withCount('visits')->orderBy('created_at', 'desc');
     	}])->urls;
     }
 }

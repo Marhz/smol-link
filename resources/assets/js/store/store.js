@@ -34,8 +34,13 @@ export default new Vuex.Store({
 		},
 		async editUrl(context, { slug, data }) {
 			const uri = '/api/' + slug + '/update';
-			const res = await axios.put(uri, data)
-			context.commit('updateUrl', { slug, data: res.data })
+			const res = await axios.put(uri, data);
+			context.commit('updateUrl', { slug, data: res.data });
+		},
+		async pushUrl(context, url) {
+			const { data } = await axios.post('/url/store', { url });
+			// console.log(data);
+			context.commit('addUrl', data);
 		}
 	},
 	mutations: {
@@ -54,6 +59,10 @@ export default new Vuex.Store({
 		updateUrl(state, { slug, data }) {
 			// state.urls = Object.assign(state.urls, { [slug]: data })
 			state.urls = state.urls.map(url => (url.slug === slug) ? data : url);
+		},
+
+		addUrl(state, url) {
+			state.urls = [url, ...state.urls]
 		}
 	}
 });

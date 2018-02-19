@@ -17,6 +17,7 @@ class Url extends Model
     	parent::boot();
 
     	static::creating(function ($url) {
+            $url->label = $url->label ?? null;
     		$url->makeSlug();
     	});
     }
