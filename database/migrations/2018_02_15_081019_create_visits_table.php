@@ -16,6 +16,7 @@ class CreateVisitsTable extends Migration
         Schema::create('visits', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('url_id');
+            $table->string('country')->nullable()->default(null);
             $table->foreign('url_id')->references('id')->on('urls');
             $table->timestamps();
         });

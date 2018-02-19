@@ -6,7 +6,15 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class ProfileTest extends TestCase
+class DashboardTest extends TestCase
 {
 	use RefreshDatabase;
+
+	/**
+	 * @test
+	 */
+	function stfut()
+	{
+		$this->assertTrue(true);
+	}
 }

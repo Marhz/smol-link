@@ -55,13 +55,13 @@ export default {
 	},
 	computed: {
 		searchedUrls() {
-			console.log('sea')
 			if (this.search.length === 0) return this.urls;
+			const search = this.search.toLowerCase().trim();
 			return this.urls.filter(url => {
 				return (
-					url.slug.includes(this.search) || 
-					url.url.includes(this.search) || 
-					((url.label !== null) && url.label.includes(this.search))
+					url.slug.includes(search) || 
+					url.url.includes(search) || 
+					((url.label !== null) && url.label.includes(search))
 				)
 			});
 		},

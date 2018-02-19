@@ -38,17 +38,24 @@
 				:period="period"
 			/>
 		</div>
-		<!-- <div style="height: 500px; background: red;"></div> -->
+		<div class="graph-container">
+			<countries-chart-container
+				:countries="countriesData"
+				:options="{responsive: true, maintainAspectRatio: false}"				
+			/>
+		</div>
  	</div>
 </template>
 
 <script>
 import PeriodSelect from '../PeriodSelect.vue';
+import CountriesChartContainer from '../CountriesChartContainer.vue';
 import { mapGetters } from 'vuex';
 
 export default {
 	components: {
-		PeriodSelect
+		PeriodSelect,
+		CountriesChartContainer
 	},
 	props: ['url', 'smallScreen'],
 
@@ -103,8 +110,15 @@ export default {
 	},
 	computed: {
 		visitsData() {
-			return this.visits[this.$route.params.slug+ ':' + this.period];
+			return this.visits[this.$route.params.slug] || [];
 			return this.$store.getters.visitsData(this.$route.params.slug)
+		},
+		countriesData() {
+			return this.visitsData.map(visit => {
+				if (visit.country === null)
+					return 'Unknown';
+				return visit.country;
+			});
 		},
 		...mapGetters(['visits']),
 	}

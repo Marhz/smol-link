@@ -6,6 +6,7 @@ use App\Url;
 use Illuminate\Http\Request;
 use App\Http\Requests\UrlRequest;
 use Illuminate\Support\Facades\Redirect;
+use App\Jobs\GeolocateRequest;
 
 class UrlController extends Controller
 {
@@ -53,8 +54,8 @@ class UrlController extends Controller
      */
     public function show(Url $url)
     {
-        $url->visits()->create();
-        return redirect()->to('http://' . $url->url);
+        GeolocateRequest::dispatch($url, request()->ip());
+        // return redirect()->to('http://' . $url->url);
     }
 
     public function update(UrlRequest $request, Url $url)

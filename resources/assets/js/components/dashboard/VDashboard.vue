@@ -12,15 +12,13 @@
 			<url-overview 
 				:urls="urls" 
 				:selectedUrl="selectedUrl" 
-				@open="showStats = true"
 			/>
 			<div class="col-md-8 col-12 link-view" :style="urlContainerHeight" ref="info" v-show='showStats'>
 				<router-view
 					:url="selectedUrl"
 					:small-screen="smallScreen"
-					@close="showStats = false"
+					@close="closeStats"
 					@updateUrl="updateUrl"
-					v-if="selectedUrl !== undefined"
 				></router-view>
 			</div>
 		</div>
@@ -39,7 +37,6 @@ export default {
 	props: ['user'],
 	data() {
 		return {
-			showStats: true,
 			input: '',
 			smallScreen: (window.innerWidth <= 768)
 		}
@@ -56,8 +53,7 @@ export default {
 		setElemsHeight() {
 			this.smallScreen = (window.innerWidth <= 768);
 			this.$refs.urlsContainer.style.height = (window.innerHeight - this.$refs.urlsContainer.offsetTop - this.$refs.urlsContainer.firstChild.firstChild.clientHeight) + "px"
-			this.showStats = this.smallScreen || this.$route.params.slug.length > 0;
-			if (this.smallScreen && this.$refs.info.style.height !== "100%") {
+			if (this.smallScreen) {
 				this.$refs.info.style.height = "100%"
 			} else {
 				this.$refs.info.style.height = (window.innerHeight - this.$refs.urlsContainer.offsetTop) + "px";
@@ -73,29 +69,29 @@ export default {
 		},
 		submit() {
 			this.$store.dispatch('pushUrl', this.input).then(() => {
-				console.log(this.urls[0].slug);
 				this.$router.push(this.urls[0].slug);
 			});
 		},
 		error() {
 
+		},
+		closeStats() {
+			this.$router.push('/');
 		}
 	},
 	computed:{
 		...mapGetters(['urls', 'visits']),
 		selectedUrl() {
-			return this.urls.find(url => url.slug === this.$route.params.slug);
-			return this.urls[this.$route.params.slug];
-			if (url !== undefined )
-				url.selected = (url.slug) === this.$route.params.slug;
-			console.log(url);
-			return url;
+			return this.urls.find(url => url.slug === this.$route.params.slug) || { slug: '' };
 		},
 		urlContainerHeight() {
 			// return {color: 'red'};
 			// console.log(this.$refs);
 			// return { height: (window.innerHeight - this.$refs.urlsContainer.offsetTop) + "px" };
 				
+		},
+		showStats() {
+			return !!this.$route.params.slug;
 		}
 	}
 }

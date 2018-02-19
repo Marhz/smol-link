@@ -14,7 +14,7 @@ export default new Vuex.Store({
 		visits: (state) => state.visits,
 		visitsData: (state, getters) => (slug) => {
 			return getters.visits[slug]
-		}
+		},
 	},
 	actions: {
 		async getUrls(context) {
@@ -22,13 +22,17 @@ export default new Vuex.Store({
 			context.commit('addUrls', data)
 		},
 		async getVisits(context, { urlSlug, period }) {
-			const namespace = urlSlug + ':' + period;
+			const namespace = urlSlug;
 
 			if (Object.keys(context.state.visits).includes(namespace))
 				return;
 
 			let uri = '/api/' + urlSlug + '/visits';
 			uri += (period !== null) ? '?since=' + period : '';
+			const visits = context.state.visits[namespace]; 
+			if (visits) {
+				uri += '&after=' + visits[visits.length]
+			}
 			const { data } = await axios.get(uri);
 			context.commit('addVisits', {data, urlSlug, namespace});
 		},

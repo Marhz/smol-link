@@ -60,6 +60,11 @@
 				// this.fillData();
 				this.why = this.chartData
 			},
+			period: function() {
+				// this.fillData();
+				this.why = this.chartData
+			},
+
 		},
 	  	computed: {
 			chartData() {
@@ -73,8 +78,10 @@
 			    }
 			},
 	  		visitsFormatted() {
-	  			const visits = this.visits.reduce((acc, visit) => {
-	  				visit = moment(visit.created_at);
+				const visits = this.visits.map(visit => moment(visit.created_at))
+				.filter(visit => {
+					return (visit > moment().subtract(1, this.period))
+				}).reduce((acc, visit) => {
 	  				let format = visit[this.durationConfig.visitsFormattingFunc]();
 	  				if (Object.keys(acc).includes(format.toString())) {
 	  					acc[format]++;

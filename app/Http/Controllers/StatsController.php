@@ -20,13 +20,16 @@ class StatsController extends Controller
 
     public function getVisits(Url $url)
     {
-        switch(request()->query('since')) {
-            case 'day': $since = Carbon::now()->subHours(24); break;
-            case 'week': $since = Carbon::now()->subWeek(); break;
-            case 'month' : $since = Carbon::now()->subMonth(); break;
-            case 'year' : $since = Carbon::now()->subYear(); break;
-            default : $since = Carbon::now()->subHours(24); break;
-        }
-        return $url->visits()->where('created_at', '>', $since)->orderBy('created_at', 'desc')->get();
+        // echo request()->query('latest');
+        // die();
+        // switch(request()->query('since')) {
+        //     case 'day': $since = Carbon::now()->subHours(24); break;
+        //     case 'week': $since = Carbon::now()->subWeek(); break;
+        //     case 'month' : $since = Carbon::now()->subMonth(); break;
+        //     case 'year' : $since = Carbon::now()->subYear(); break;
+        //     default : $since = Carbon::now()->subHours(24); break;
+        // }
+        // return $url->visits()->where('created_at', '>', $since)->orderBy('created_at', 'desc')->get();
+        return $url->visits()->orderBy('created_at', 'desc')->get();
     }
 }
