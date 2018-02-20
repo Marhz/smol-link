@@ -6,7 +6,7 @@ use App\Url;
 use Illuminate\Http\Request;
 use App\Http\Requests\UrlRequest;
 use Illuminate\Support\Facades\Redirect;
-use App\Jobs\GeolocateRequest;
+use App\Jobs\RecordVisit;
 
 class UrlController extends Controller
 {
@@ -54,7 +54,7 @@ class UrlController extends Controller
      */
     public function show(Url $url)
     {
-        GeolocateRequest::dispatch($url, request()->ip());
+        RecordVisit::dispatch($url, request()->ip());
         if (! preg_match('/^https?:\/\//', $url->url))
             $url->url = "https://" . $url->url;
         return redirect()->to($url->url);

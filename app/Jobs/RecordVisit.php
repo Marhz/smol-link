@@ -10,8 +10,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Url;
 use GuzzleHttp\Client;
 use App\Visit;
+use Illuminate\Support\Facades\Cache;
 
-class GeolocateRequest implements ShouldQueue
+class RecordVisit implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -37,11 +38,29 @@ class GeolocateRequest implements ShouldQueue
      */
     public function handle(Client $client)
     {
-        $response = $client->request('GET', 'http://www.geoplugin.net/php.gp?ip=' . $this->ip);
-        $data = unserialize($response->getBody());
+        if ($this->isInCache()) return;
+        $country = $this->geolocateRequest($client);
+        Cache::put($this->cacheKey(), true, (60 * 24));
         Visit::create([
-            'country' => $data['geoplugin_countryName'] ?? null,
+            'country' => $country,
             'url_id' => $this->url->id
         ]);
+    }
+
+    protected function geolocateRequest($client)
+    {
+        $response = $client->request('GET', 'http://www.geoplugin.net/php.gp?ip=' . $this->ip);
+        $data = unserialize($response->getBody());
+        return $data['geoplugin_countryName'] ?? null;
+    }
+
+    protected function isInCache()
+    {
+        return Cache::get($this->cacheKey()) !== null;
+    }
+
+    protected function cacheKey()
+    {
+        return $this->url->id . "." . $this->ip;
     }
 }

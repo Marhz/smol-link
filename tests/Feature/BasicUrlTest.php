@@ -43,18 +43,6 @@ class BasicUrlTest extends TestCase
     /**
      * @test
      */
-    function it_increments_the_number_of_visits_when_a_link_is_visited()
-    {
-        $this->mockGuzzle();
-        $url = factory('App\Url')->create();
-        $this->assertEquals(0, $url->visits_count);
-        $res = $this->get($url->path);
-        $this->assertEquals(1, $url->fresh()->visits_count);
-    }
-
-    /**
-     * @test
-     */
     function it_trims_trailling_slashes()
     {
         $url = "example.com/";
@@ -81,14 +69,5 @@ class BasicUrlTest extends TestCase
     //     $res = $this->getJson('api/' . $url->slug . '/visits?since=week');
     //     $this->assertCount(100, $res->json());
     // }
-    /**
-     * @test
-     */
-    function da_test()
-    {
-        $url = factory('App\Url')->create();
-        $this->mockGuzzle();
-        $this->get($url->path);
-        $this->assertTrue(true);
-    }
+
 }

@@ -14,6 +14,12 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->withoutExceptionHandling();
+    }
+
     protected function mockGuzzle($responses = [])
     {
         app()->bind('GuzzleHttp\Client', function ($app) use ($responses) {
@@ -28,6 +34,29 @@ abstract class TestCase extends BaseTestCase
             $this->withoutExceptionHandling();
             $handler = HandlerStack::create($mock);
             return new Client(['handler' => $handler]);
+        });
+    }
+
+    protected function mockCache()
+    {
+        app()->bind('cache', function ($app) { 
+            return new class {
+                protected $cache = [];
+
+                public function put($key, $value, $time)
+                {
+                    $time = now()->addMinutes($time);
+                    $this->cache[$key] = [$value, $time];
+                }
+
+                public function get($key)
+                {
+                    $cache = array_filter($this->cache, function ($item) {
+                        return now()->lt($item[1]);
+                    });
+                    return $cache[$key] ?? null;
+                }
+            };
         });
     }
 
