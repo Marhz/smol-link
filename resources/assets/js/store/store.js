@@ -22,19 +22,14 @@ export default new Vuex.Store({
 			context.commit('addUrls', data)
 		},
 		async getVisits(context, { urlSlug, period }) {
-			const namespace = urlSlug;
-
-			if (Object.keys(context.state.visits).includes(namespace))
+			if (Object.keys(context.state.visits).includes(urlSlug))
 				return;
 
 			let uri = '/api/' + urlSlug + '/visits';
 			uri += (period !== null) ? '?since=' + period : '';
-			const visits = context.state.visits[namespace]; 
-			if (visits) {
-				uri += '&after=' + visits[visits.length]
-			}
+			const visits = context.state.visits[urlSlug]; 
 			const { data } = await axios.get(uri);
-			context.commit('addVisits', {data, urlSlug, namespace});
+			context.commit('addVisits', {data, urlSlug});
 		},
 		async editUrl(context, { slug, data }) {
 			const uri = '/api/' + slug + '/update';
@@ -50,18 +45,13 @@ export default new Vuex.Store({
 	mutations: {
 		addUrls(state, urls) {
 			state. urls = urls;
-			// state.urls = urls.reduce((acc, url) => {
-			// 	acc[url.slug] = url;
-			// 	return acc;
-			// }, {});
 		},
 
-		addVisits(state, { data, urlSlug, namespace }) {
-			state.visits = { ...state.visits, [namespace]: data};
+		addVisits(state, { data, urlSlug }) {
+			state.visits = { ...state.visits, [urlSlug]: data};
 		},
 
 		updateUrl(state, { slug, data }) {
-			// state.urls = Object.assign(state.urls, { [slug]: data })
 			state.urls = state.urls.map(url => (url.slug === slug) ? data : url);
 		},
 

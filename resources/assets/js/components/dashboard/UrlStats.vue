@@ -57,7 +57,7 @@ export default {
 		PeriodSelect,
 		CountriesChartContainer
 	},
-	props: ['url', 'smallScreen'],
+	props: ['url'],
 
 	data() {
 		return {
@@ -127,7 +127,7 @@ export default {
 
 <style scoped>
 	.graph-container {
-		/*height: 200px;*/
 		position: relative;
+		height: 400px;
 	}
 </style>

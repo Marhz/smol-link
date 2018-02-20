@@ -8,15 +8,14 @@
                 <button @click="submit" class="btn btn-primary" type="submit">Make smol</button>
             </div>
         </div>
-		<div class="row no-gutters" :style="urlContainerHeight" ref="urlsContainer">
-			<url-overview 
+		<div class="row no-gutters" ref="urlsContainer">
+			<url-overview
 				:urls="urls" 
 				:selectedUrl="selectedUrl" 
 			/>
-			<div class="col-md-8 col-12 link-view" :style="urlContainerHeight" ref="info" v-show='showStats'>
+			<div class="col-md-8 col-12 link-view" ref="info" v-if='selectedUrl !== undefined'>
 				<router-view
 					:url="selectedUrl"
-					:small-screen="smallScreen"
 					@close="closeStats"
 					@updateUrl="updateUrl"
 				></router-view>
@@ -83,12 +82,6 @@ export default {
 		...mapGetters(['urls', 'visits']),
 		selectedUrl() {
 			return this.urls.find(url => url.slug === this.$route.params.slug) || { slug: '' };
-		},
-		urlContainerHeight() {
-			// return {color: 'red'};
-			// console.log(this.$refs);
-			// return { height: (window.innerHeight - this.$refs.urlsContainer.offsetTop) + "px" };
-				
 		},
 		showStats() {
 			return !!this.$route.params.slug;

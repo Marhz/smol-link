@@ -55,7 +55,9 @@ class UrlController extends Controller
     public function show(Url $url)
     {
         GeolocateRequest::dispatch($url, request()->ip());
-        // return redirect()->to('http://' . $url->url);
+        if (! preg_match('/^https?:\/\//', $url->url))
+            $url->url = "https://" . $url->url;
+        return redirect()->to($url->url);
     }
 
     public function update(UrlRequest $request, Url $url)

@@ -27,7 +27,7 @@ class GeolocateRequest implements ShouldQueue
     public function __construct(Url $url, $ip)
     {
         $this->url = $url;
-        $this->ip = $ip;
+        $this->ip = $ip;        
     }
     
     /**
@@ -35,11 +35,8 @@ class GeolocateRequest implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(Client $client)
     {
-        // var_dump('helloeeeee');
-        $client = new Client();
-        $this->ip = "85.169.97.45";
         $response = $client->request('GET', 'http://www.geoplugin.net/php.gp?ip=' . $this->ip);
         $data = unserialize($response->getBody());
         Visit::create([

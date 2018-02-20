@@ -44,6 +44,9 @@ export default {
             this.why = this.chartData
         },
     },
+    mounted() {
+        this.why = this.chartData
+    },
     computed: {
         chartData() {
             return {
