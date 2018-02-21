@@ -6,26 +6,20 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Url;
-use Illuminate\Support\Facades\Queue;
 use App\Jobs\RecordVisit;
 use Carbon\Carbon;
 
 class VisitsRecordingTest extends TestCase
 {
     use RefreshDatabase;
+    
+    protected $url;
 
-    /**
-     * @test
-     */
-    function it_pushed_the_recording_event_in_the_queue()
+    public function setUp()
     {
-        $this->withoutExceptionHandling();
-        Queue::fake();
-        $url = factory('App\Url')->create();
-        $this->get($url->path);
-        Queue::assertPushed(RecordVisit::class, function($job) use ($url) {
-            return ($job->url->id === $url->id);
-        });
+        parent::setUp();
+        $this->mockGuzzle();
+        $this->url = factory('App\Url')->create();
     }
 
     /**
@@ -33,11 +27,9 @@ class VisitsRecordingTest extends TestCase
      */
     function it_increments_the_number_of_visits_when_a_link_is_visited()
     {
-        $this->mockGuzzle();
-        $url = factory('App\Url')->create();
-        $this->assertEquals(0, $url->visits_count);
-        $this->get($url->path);
-        $this->assertEquals(1, $url->fresh()->visits_count);
+        $this->assertEquals(0, $this->url->visits_count);
+        RecordVisit::dispatch($this->url, '', '');
+        $this->assertEquals(1, $this->url->fresh()->visits_count);
     }
 
     /**
@@ -45,12 +37,10 @@ class VisitsRecordingTest extends TestCase
      */
     function it_doesnt_increment_the_visits_twice_for_the_same_ip()
     {
-        $this->mockGuzzle();
-        $url = factory('App\Url')->create();
         $this->assertEquals(0, $url->visits_count);
-        $res = $this->get($url->path);
+        RecordVisit::dispatch($this->url, '127.0.0.1', '');
         $this->assertEquals(1, $url->fresh()->visits_count);
-        $res = $this->get($url->path);
+        RecordVisit::dispatch($this->url, '127.0.0.1', '');
         $this->assertEquals(1, $url->fresh()->visits_count);
     }
 
@@ -61,17 +51,15 @@ class VisitsRecordingTest extends TestCase
     function it_refreshes_the_cache_timer_after_a_day()
     {
         $this->mockCache();
-        $this->mockGuzzle();
 
-        $url = factory('App\Url')->create();
         $this->assertEquals(0, $url->visits_count);
-        $res = $this->get($url->path);
+        RecordVisit::dispatch($this->url, '', '');
         $this->assertEquals(1, $url->fresh()->visits_count);
-        $res = $this->get($url->path);
+        RecordVisit::dispatch($this->url, '', '');
         $this->assertEquals(1, $url->fresh()->visits_count);
         Carbon::setTestNow(now()->addHours(25));
 
-        $this->get($url->path);
+        RecordVisit::dispatch($this->url, '', '');
         $this->assertEquals(2, $url->fresh()->visits_count);
     }
 
@@ -80,13 +68,11 @@ class VisitsRecordingTest extends TestCase
      */
     function it_tries_to_get_a_referrer()
     {
-        $this->mockGuzzle();
-
         $url = factory('App\Url')->create();
-        $this->call('GET', $url->path, [], [], [], ['HTTP_REFERER' => 'https://l.facebook.com/']);
+        RecordVisit::dispatch($this->url, '', 'https://l.facebook.com/');
         $this->assertEquals('Facebook', $url->visits()->first()->referrer);
         $url = factory('App\Url')->create();
-        $this->get($url->path);
-        $this->assertNull($url->visits()->first()->referrer);        
+        RecordVisit::dispatch($this->url, '', 'https://random-site.com');
+        $this->assertNull($url->visits()->first()->referrer);
     }
 }

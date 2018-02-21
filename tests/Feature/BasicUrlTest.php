@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Url;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Queue;
+use App\Jobs\RecordVisit;
 
 class BasicUrlTest extends TestCase
 {
@@ -51,6 +53,18 @@ class BasicUrlTest extends TestCase
         $this->assertEquals("example.com", $generatedUrl->url);
     }
 
+    /**
+     * @test
+     */
+    function it_pushed_the_recording_event_in_the_queue()
+    {
+        Queue::fake();
+        $url = factory('App\Url')->create();
+        $this->get($url->path);
+        Queue::assertPushed(RecordVisit::class, function ($job) use ($url) {
+            return ($job->url->id === $url->id);
+        });
+    }
     /**
      * @test
      */
