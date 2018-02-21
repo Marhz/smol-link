@@ -74,4 +74,19 @@ class VisitsRecordingTest extends TestCase
         $this->get($url->path);
         $this->assertEquals(2, $url->fresh()->visits_count);
     }
+
+    /**
+     * @test
+     */
+    function it_tries_to_get_a_referrer()
+    {
+        $this->mockGuzzle();
+
+        $url = factory('App\Url')->create();
+        $this->call('GET', $url->path, [], [], [], ['HTTP_REFERER' => 'https://l.facebook.com/']);
+        $this->assertEquals('Facebook', $url->visits()->first()->referrer);
+        $url = factory('App\Url')->create();
+        $this->get($url->path);
+        $this->assertNull($url->visits()->first()->referrer);        
+    }
 }

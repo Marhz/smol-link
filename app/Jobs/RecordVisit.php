@@ -2,15 +2,15 @@
 
 namespace App\Jobs;
 
+use App\Url;
+use App\Visit;
+use GuzzleHttp\Client;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Url;
-use GuzzleHttp\Client;
-use App\Visit;
-use Illuminate\Support\Facades\Cache;
 
 class RecordVisit implements ShouldQueue
 {
@@ -19,16 +19,18 @@ class RecordVisit implements ShouldQueue
     public $url;
     public $ip;
     public $tries = 3;
+    public $referrer;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Url $url, $ip)
+    public function __construct(Url $url, $ip, $referrer)
     {
         $this->url = $url;
-        $this->ip = $ip;        
+        $this->ip = $ip;
+        $this->referrer = $referrer;
     }
     
     /**
@@ -43,7 +45,8 @@ class RecordVisit implements ShouldQueue
         Cache::put($this->cacheKey(), true, (60 * 24));
         Visit::create([
             'country' => $country,
-            'url_id' => $this->url->id
+            'url_id' => $this->url->id,
+            'referrer' => $this->getReferrer()
         ]);
     }
 
@@ -52,6 +55,19 @@ class RecordVisit implements ShouldQueue
         $response = $client->request('GET', 'http://www.geoplugin.net/php.gp?ip=' . $this->ip);
         $data = unserialize($response->getBody());
         return $data['geoplugin_countryName'] ?? null;
+    }
+
+    protected function getReferrer()
+    {
+        $referrers = config('custom.socialMediaReferrers');
+        foreach ($referrers as $socialMedia => $urls) {
+            foreach($urls as $url) {
+                if (preg_match('#^' . $url . '.*#', $this->referrer)) {
+                    return $socialMedia;
+                }
+            }
+        }
+        return null;
     }
 
     protected function isInCache()
