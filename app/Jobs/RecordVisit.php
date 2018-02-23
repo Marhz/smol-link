@@ -54,7 +54,8 @@ class RecordVisit implements ShouldQueue
     {
         $response = $client->request('GET', 'http://www.geoplugin.net/php.gp?ip=' . $this->ip);
         $data = unserialize($response->getBody());
-        return $data['geoplugin_countryName'] ?? null;
+        $country = $data['geoplugin_countryName'] ?? null;
+        return $country ? : null;
     }
 
     protected function getReferrer()
