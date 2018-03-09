@@ -38,24 +38,34 @@
 				:period="period"
 			/>
 		</div>
-		<div class="graph-container">
-			<countries-chart-container
-				:countries="countriesData"
-				:options="{responsive: true, maintainAspectRatio: false}"				
-			/>
+		<div class="row no-gutters mt-3">
+			<div class="col-md-6 col-12">
+				<h3>Countries Chart</h3>
+				<pie-chart-container
+					:countries="countriesData"
+					:options="{responsive: true, maintainAspectRatio: false}"				
+				/>
+			</div>
+			<div class="col-md-6 col-12">
+				<h3>Referrers Chart</h3>
+				<pie-chart-container
+					:countries="referrersData"
+					:options="{responsive: true, maintainAspectRatio: false}"				
+				/>
+			</div>			
 		</div>
  	</div>
 </template>
 
 <script>
 import PeriodSelect from '../PeriodSelect.vue';
-import CountriesChartContainer from '../CountriesChartContainer.vue';
+import PieChartContainer from '../PieChartContainer.vue';
 import { mapGetters } from 'vuex';
 
 export default {
 	components: {
 		PeriodSelect,
-		CountriesChartContainer
+		PieChartContainer,
 	},
 	props: ['url'],
 
@@ -112,6 +122,13 @@ export default {
 		visitsData() {
 			return this.visits[this.$route.params.slug] || [];
 			return this.$store.getters.visitsData(this.$route.params.slug)
+		},
+		referrersData() {
+			return this.visitsData.map(visit => {
+				if (visit.referrer === null)
+					return 'Direct link'
+				return visit.referrer
+			});
 		},
 		countriesData() {
 			return this.visitsData.map(visit => {

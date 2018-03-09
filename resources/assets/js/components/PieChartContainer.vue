@@ -1,6 +1,6 @@
 <template>
 <div class="graphc">
- 	<countries-chart
+ 	<pie-chart
 		:options="options"
 		:chart-data="why"
 		:height="400"
@@ -9,11 +9,11 @@
 </template>
 
 <script>
-import CountriesChart from './CountriesChart.vue';
+import PieChart from './PieChart.vue';
 import moment from 'moment';
 
 export default {
-    components: { CountriesChart },
+    components: { PieChart },
     props: {
         options: Object,
         countries: {
@@ -70,7 +70,7 @@ export default {
                     acc[country] = 1;
                 return acc
             }, {})
-            return [...new Set(this.countries)].sort((a, b) => obj[a] < obj[b] ? 1 : -1);
+            return Object.keys(obj).sort((a, b) => obj[a] < obj[b] ? 1 : -1);
         },
         backgroundColors() {
             return this.labels.map((label, i) => this.colors[i % this.colors.length])
