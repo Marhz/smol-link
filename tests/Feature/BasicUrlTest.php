@@ -7,16 +7,23 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Queue;
 use App\Jobs\RecordVisit;
+use Illuminate\Support\Facades\Bus;
+use App\Jobs\CreatedUrl;
 
 class BasicUrlTest extends TestCase
 {
     use RefreshDatabase;
+    
+    public function setUp()
+    {
+        parent::setUp();
+        Queue::fake();
+    }
     /**
      * @test
      */
     function it_creates_a_minified_url_for_an_url()
     {
-        $this->withoutExceptionHandling();
         $url = "example.com";
         $response = $this->post('/url/store', ['url' => $url]);
         $response->assertStatus(201);
@@ -29,7 +36,6 @@ class BasicUrlTest extends TestCase
      */
     function it_doesnt_create_a_new_minified_url_if_the_url_already_exists()
     {
-        $this->withoutExceptionHandling();
         $url = "example.com";
         $this->post('/url/store', ['url' => $url]);
         $this->post('/url/store', ['url' => $url]);
@@ -58,13 +64,27 @@ class BasicUrlTest extends TestCase
      */
     function it_pushed_the_recording_event_in_the_queue()
     {
-        Queue::fake();
         $url = factory('App\Url')->create();
         $this->get($url->path);
+        
         Queue::assertPushed(RecordVisit::class, function ($job) use ($url) {
             return ($job->url->id === $url->id);
         });
     }
+    
+    /**
+     * @test
+     */
+    function it_pushes_the_created_url_event()
+    {
+        $url = "example.com/";
+        $this->post(route('url.store', ['url' => $url]));
+        $url = Url::first();
+        Queue::assertPushed(CreatedUrl::class, function ($job) use ($url) {
+            return ($job->url->id === $url->id);
+        });
+    }
+    
     /**
      * @test
      */

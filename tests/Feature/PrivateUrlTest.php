@@ -4,12 +4,20 @@ namespace Tests\Feature;
 
 use App\Url;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PrivateUrlTest extends TestCase
 {
-	use RefreshDatabase;
+    use RefreshDatabase;
+    
+    public function setUp()
+    {
+        parent::setUp();
+        Queue::fake();
+    }
+    
     /**
      * @test
      */

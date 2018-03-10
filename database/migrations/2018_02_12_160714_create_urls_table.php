@@ -17,7 +17,8 @@ class CreateUrlsTable extends Migration
             $table->increments('id');
             $table->string('slug')->unique();
             $table->string('url');
-            $table->string('label')->nullable();
+            $table->string('label')->nullable()->default(null);
+            $table->string('title')->nullable()->default(null);
             $table->unsignedInteger('user_id')->nullable()->default(null);
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Url;
+use App\Jobs\CreatedUrl;
+use App\Jobs\RecordVisit;
 use Illuminate\Http\Request;
 use App\Http\Requests\UrlRequest;
 use Illuminate\Support\Facades\Redirect;
-use App\Jobs\RecordVisit;
 
 class UrlController extends Controller
 {
@@ -33,16 +34,18 @@ class UrlController extends Controller
     public function store(UrlRequest $request)
     {
         $data = $request->only('url');
-        if(auth()->guest()) {
+        if (auth()->guest()) {
             $data['url'] = $this->normalizeUrl($data['url']);
             $url = Url::where('url', $data['url'])->where('user_id', null)->first();
-            if(!$url) {
+            if (!$url) {
                 $url = Url::create($data);
+                CreatedUrl::dispatch($url);
             }
             return $url;
-        } 
+        }
         $data['user_id'] = auth()->id();
         $url = Url::create($data);
+        CreatedUrl::dispatch($url);
         return $url;
     }
 
@@ -55,7 +58,7 @@ class UrlController extends Controller
     public function show(Url $url)
     {
         RecordVisit::dispatch($url, request()->ip(), request()->server('HTTP_REFERER'));
-        if (! preg_match('/^https?:\/\//', $url->url))
+        if (!preg_match('/^https?:\/\//', $url->url))
             $url->url = "https://" . $url->url;
         return redirect()->to($url->url);
     }

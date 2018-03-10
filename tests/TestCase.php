@@ -27,8 +27,8 @@ abstract class TestCase extends BaseTestCase
             if (count($responses) === 0) {
                 $mock = [new Response(200, ['X-Foo' => 'Bar'])]; 
             }
-            foreach($responses as $status => $content) {
-                $mock[] = new Response($status, $content);
+            foreach($responses as $response) {
+                $mock[] = new Response($response[0], $response[1] ?? [], $response[2] ?? null);
             }
             $mock = new MockHandler($mock);
             $this->withoutExceptionHandling();
