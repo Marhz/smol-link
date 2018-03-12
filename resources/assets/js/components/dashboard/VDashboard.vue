@@ -11,9 +11,9 @@
 		<div class="row no-gutters" ref="urlsContainer">
 			<url-overview
 				:urls="urls" 
-				:selectedUrl="selectedUrl" 
+				:selectedUrl="selectedUrl"
 			/>
-			<div class="col-md-8 col-12 link-view" ref="info" v-if='selectedUrl !== undefined'>
+			<div class="col-md-8 col-12 link-view" ref="info" v-if='showStats' v-remaining>
 				<router-view
 					:url="selectedUrl"
 					@close="closeStats"
@@ -37,30 +37,12 @@ export default {
 	data() {
 		return {
 			input: '',
-			smallScreen: (window.innerWidth <= 768)
 		}
 	},
 	mounted() {
-		window.addEventListener('resize', debounce(this.setElemsHeight, 100))
-		this.setElemsHeight();
 		this.$store.dispatch('getUrls');
 	},
-	beforeDestroy() {
-		window.removeEventListener('resize', this.setElemsHeight)
-	},
 	methods: {
-		setElemsHeight() {
-			this.smallScreen = (window.innerWidth <= 768);
-			this.$refs.urlsContainer.style.height = (window.innerHeight - this.$refs.urlsContainer.offsetTop - this.$refs.urlsContainer.firstChild.firstChild.clientHeight) + "px"
-			if (this.smallScreen) {
-				this.$refs.info.style.height = "100%"
-			} else {
-				this.$refs.info.style.height = (window.innerHeight - this.$refs.urlsContainer.offsetTop) + "px";
-			}
-		},
-		selectUrl(url) {
-			// this.selectedUrl = url
-		},
 		updateUrl(slug, newUrl) {
 			const url = this.urls.find(url => url.slug === slug)
 			url.label = newUrl.label;

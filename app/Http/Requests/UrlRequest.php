@@ -44,7 +44,7 @@ class UrlRequest extends FormRequest
 
     protected function urlRegex()
     {
-        return '#^(((https?|ftp)://)?(\S*?\.\S*?))([\s)\[\]{},;"\':<]|\.\s|$)#i';
+        return '/^(((https?|ftps?):\/\/)?(\S*?\.\S*?))([\s)\[\]{},;"\':<]|\.\s|$)/';
     }
 
     protected function reservedNames() {

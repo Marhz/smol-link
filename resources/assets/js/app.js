@@ -17,6 +17,8 @@ Vue.component('v-copy', require('./components/VCopy.vue'));
 Vue.component('vue-navbar', require('./components/VueNavbar.vue'));
 Vue.component('public-stats', require('./components/PublicStats.vue'));
 
+import remaining from './directives/RemainingHeight'
+Vue.directive('remaining', remaining);
 
 const routes = [
 	{ path: '/' },

@@ -14,14 +14,13 @@
 				</div>
 			</div>
 		</div>
-		<div class="links-list overflow-scroll">
+		<div class="links-list overflow-scroll" v-remaining>
 			<div v-for="url in sortedUrls" :key="url.slug">
 				<router-link :to="'/links/' + url.slug">
 					<div class="url-overview" :class="getClass(url)" @click="$emit('open')">
 						<h3 v-text="displayedLabel(url)"></h3>
 						<div class="flex">
 							<p v-text="url.path"></p>
-							<p>{{ url.label }}</p>
 							<p class="ml-auto"><i class="fa fa-chart-bar mr-1"></i>{{ url.visits_count }} Visits</p>
 						</div>
 					</div>
