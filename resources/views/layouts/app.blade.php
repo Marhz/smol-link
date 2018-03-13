@@ -58,6 +58,7 @@
         </b-navbar>
 
         <main class="">
+            <v-alert></v-alert>
             @yield('content')
         </main>
     </div>

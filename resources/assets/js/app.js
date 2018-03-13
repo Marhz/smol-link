@@ -17,6 +17,7 @@ Vue.component('visits-graph-container', require('./components/VisitsGraphContain
 Vue.component('v-copy', require('./components/VCopy.vue'));
 Vue.component('vue-navbar', require('./components/VueNavbar.vue'));
 Vue.component('public-stats', require('./components/PublicStats.vue'));
+Vue.component('v-alert', require('./components/VAlert.vue'));
 
 Vue.directive('remaining', remaining);
 
