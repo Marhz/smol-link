@@ -18,6 +18,7 @@ class Url extends Model
 
     	static::creating(function ($url) {
             $url->label = $url->label ?? null;
+            $url->title = $url->title ?? null;
     		$url->makeSlug();
     	});
     }

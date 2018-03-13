@@ -1,5 +1,5 @@
 <template>
-	<button class="btn btn btn-outline-success" @click="copy">Copy</button>
+	<button class="btn btn-outline-success" @click="copy">Copy</button>
 </template>
 
 <script>

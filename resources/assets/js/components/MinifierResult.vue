@@ -1,6 +1,6 @@
 <template>
 	<div class="result">
-		<p v-text="result.url"></p>
+		<p v-text="titleOrUrl"></p>
 		<div class="row">
 			<div class="col-12 col-md">
 				<span class="" v-text="result.path"></span>
@@ -22,6 +22,9 @@
 		computed: {
 			statsPath() {
 				return this.result.path + '/stats';
+			},
+			titleOrUrl() {
+				return (this.result.title === null) ? this.result.url : this.result.title
 			}
 		}
 	}
@@ -49,9 +52,6 @@
 	@media (min-width: 768px) {
 		.result{
 			font-size: 1.5rem;
-		}
-		.btn {
-			font-size: 1.3rem;
 		}
 		.result-stats {
 			text-align: right;
