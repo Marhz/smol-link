@@ -10,12 +10,17 @@ class User extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'confirmation_token'
     ];
     protected $hidden = [
         'password', 'remember_token',
     ];
 
+    public function isConfirmed()
+    {
+        return ($this->confirmation_token === null);
+    }
+    
     public function urls()
     {
         return $this->hasMany(Url::class);

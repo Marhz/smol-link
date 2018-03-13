@@ -4,6 +4,7 @@ import UrlStats from './components/dashboard/UrlStats.vue';
 import store from './store/store';
 import Vuex from 'vuex';
 import Vue from 'vue';
+import remaining from './directives/RemainingHeight'
 
 window.Vue = Vue;
 
@@ -17,7 +18,6 @@ Vue.component('v-copy', require('./components/VCopy.vue'));
 Vue.component('vue-navbar', require('./components/VueNavbar.vue'));
 Vue.component('public-stats', require('./components/PublicStats.vue'));
 
-import remaining from './directives/RemainingHeight'
 Vue.directive('remaining', remaining);
 
 const routes = [

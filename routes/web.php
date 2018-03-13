@@ -23,6 +23,8 @@ Route::get('/{url}/stats', 'StatsController@show')->name('url.stats');
 Route::post('/url/store', 'UrlController@store')->name('url.store');
 Route::get('/{url}', 'UrlController@show')->name('url.show');
 
+Route::get('/register/confirm', 'Auth\EmailConfirmationController@index');
+
 Route::get('/api/{url}/visits', 'StatsController@getVisits')->name('api.url.stats');
 Route::put('/api/{url}/update', 'UrlController@update')->name('url.update');
 Route::get('/api/urls', 'DashboardController@getUrls');
