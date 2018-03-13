@@ -12,19 +12,6 @@
 */
 
 Route::get('/', function () {
-	// $u = App\Url::all()[1];
-	// for ($i = 0; $i < 50; $i++) {
-	// 	$date = carbon\carbon::now()->subHours(rand(0, 24));
-	// 	$u->visits()->create(['created_at' => $date]);
-	// }
-	// for ($i = 0; $i < 50; $i++) {
-	// 	$date = carbon\carbon::now()->subDays(rand(3, 6));
-	// 	$u->visits()->create(['created_at' => $date]);
-	// }
-	// for ($i = 0; $i < 100; $i++) {
-	// 	$date = carbon\carbon::now()->subWeeks(rand(3, 20));
-	// 	$u->visits()->create(['created_at' => $date]);
-	// }
     return view('welcome');
 });
 
