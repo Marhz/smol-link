@@ -4,8 +4,10 @@ namespace Tests\Feature;
 
 use App\User;
 use Tests\TestCase;
+use Illuminate\Support\Carbon;
 use App\Mail\EmailConfirmation;
 use Illuminate\Support\Facades\Mail;
+use App\Console\Commands\CleanUsers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -21,7 +23,7 @@ class RegistrationTest extends TestCase
     {
         Mail::fake();
         event(new Registered(factory('App\User')->create()));    
-        Mail::assertSent(EmailConfirmation::class);
+        Mail::assertQueued(EmailConfirmation::class);
     }
     
     /**
@@ -38,7 +40,6 @@ class RegistrationTest extends TestCase
         ]); 
         $user = User::first();
         $this->assertFalse($user->isConfirmed());
-        $this->assertNotNull($user->confirmation_token);
 
         $res = $this->get('/register/confirm?token=' . $user->confirmation_token);
         $this->assertTrue($user->fresh()->isConfirmed());

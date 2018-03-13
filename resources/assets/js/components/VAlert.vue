@@ -1,7 +1,7 @@
 <template>
     <div class="alert alert-warning alert-dismissible " role="alert" v-if="show">
         <div>
-            <strong>Holy guacamole!</strong> You should check in on some of those fields below.    
+            <div v-text="message"></div>
         </div>
         <button @click="close" type="button" class="close" data-dismiss="alert" aria-label="Close">
             <i class="fa fa-times"></i>
@@ -11,6 +11,7 @@
 
 <script>
     export default {
+        props: ['message'],
         data() {
             return {
                 show: true
@@ -29,7 +30,7 @@
     position: absolute;
     z-index: 1000000;
     width: 100%;
-    font-size: 1.2rem;
+    font-size: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -28,6 +28,9 @@
 </head>
 <body>
     <div id="app">
+        @if(session()->has('flash'))
+            <v-alert message="{{ session('flash') }}"></v-alert>
+        @endif
         <b-navbar toggleable="md" type="dark" variant="info" v-cloak>
             <b-navbar-brand href="/">Smol-l.ink</b-navbar-brand>
             <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
@@ -58,7 +61,6 @@
         </b-navbar>
 
         <main class="">
-            <v-alert></v-alert>
             @yield('content')
         </main>
     </div>

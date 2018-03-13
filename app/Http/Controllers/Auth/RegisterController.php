@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -69,5 +70,10 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'confirmation_token' => str_random(40)
         ]);
+    }
+    
+    protected function registered(Request $request, $user)
+    {
+        return redirect('/')->with(['flash' => 'Registration sucessful, please confirm your email address.']);
     }
 }
