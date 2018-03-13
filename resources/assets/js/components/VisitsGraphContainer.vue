@@ -24,7 +24,7 @@ export default {
 	},
 	data() {
 		return {
-			why: [],
+			why: {},
 			periodData: {
 				day: {
 					visitsFormattingFunc: "hour",
@@ -40,7 +40,7 @@ export default {
 				},
 				month: {
 					visitsFormattingFunc: "date",
-					labelsCount: 30,
+					labelsCount: (moment().month() === 2) ? 28 : 30, // #FebHate
 					labelsDisplayFunc: (labels) => labels,
 					labelsPush: (i) => moment().subtract(i, 'days').date()
 				},
@@ -54,9 +54,12 @@ export default {
 			}
 		}
 	},
+	mounted() {
+		this.why = this.graphData;
+	},
 	watch: {
 		graphData: function() {
-			this.why = this.graphData
+			this.why = this.graphData;
 		},
 	},
 	computed: {
@@ -96,12 +99,3 @@ export default {
 	}
 }
 </script>
-
-<style>
-	.graphc {
-		position: relative;
-	}
-	.yolo {
-		height: 400px;
-	}
-</style>

@@ -1,11 +1,9 @@
 <template>
-<div class="graphc">
- 	<pie-chart
-		:options="options"
-		:chart-data="why"
-		:height="400"
-	/>
-</div>
+    <pie-chart
+        :options="options"
+        :chart-data="why"
+        :height="400"
+    />
 </template>
 
 <script>
@@ -35,17 +33,16 @@ export default {
                 '#9D69A3',
                 '#E85D75',
                 '#FF9B71',
-            ]
+            ],
         }
+    },
+    mounted() {
+        this.why = this.chartData;
     },
     watch: {
         countries: function() {
-            // this.fillData();
-            this.why = this.chartData
+            this.why = this.chartData;
         },
-    },
-    mounted() {
-        this.why = this.chartData
     },
     computed: {
         chartData() {
@@ -78,10 +75,3 @@ export default {
     }
 }
 </script>
-
-<style>
-	.graphc {
-		position: relative;
-		/*max-height: 200px;*/
-	}
-</style>
