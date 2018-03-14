@@ -46,7 +46,9 @@ export default {
 	},
 	methods: {
 		displayedLabel(url) {
-			return url.label === null ? url.url : url.label
+			return url.label === null ? 
+				((url.title === null) ? url.url : url.title) 
+				: url.label
 		},
 		getClass(url) {
 			return this.selectedUrl.slug === url.slug ? 'selected' : ''

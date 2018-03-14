@@ -18,28 +18,33 @@ class GithubLoginController extends Controller
     public function handleCallback()
     {
         try {
-            $user = Socialite::driver('github')->user();
+            $socialiteUser =  Socialite::driver('github')->user();
         } catch (\Exception $e) {
-            return redirect()->back()->with(['flash' => 'There was a problem while logging you with github, please try again']);
+            return redirect()
+                ->back()
+                ->with(['flash' => 'There was a problem while logging you with github, please try again']);
         }
-        if ($existingUser = User::where('email', $user->email)->first()) {
-           $existingUser->provider = 'github';
-           $existingUser->provider_id = $user->id;
-           $existingUser->save();
-           Auth::login($existingUser);
-           return redirect('/dashboard'); 
-        }
-        if ($existingUser = User::where('provider', 'github')->where('provider_id', $user->id)->first()) {
-            Auth::login($existingUser);
-            return redirect('/dashboard');
-        }
-        $user = User::create([
-            'email' => $user->email,
-            'name' => $user->nickname,
-            'provider' => 'github',
-            'provider_id' => $user->id
-        ]);
-        Auth::login($user);
+        $this->loginUser($socialiteUser);
         return redirect('/dashboard');
+    }
+    
+    protected function loginUser($socialiteUser)
+    {
+        if ($user = User::whereNull('provider_id')->where('email', $socialiteUser->email)->first()) {
+            $user->provider = 'github';
+            $user->provider_id = $socialiteUser->id;
+            $user->save();
+        } else {
+            $user = User::firstOrCreate(
+                ['provider' => 'github', 'provider_id' => $socialiteUser->id],
+                [
+                    'email' => $socialiteUser->email,
+                    'name' => $socialiteUser->nickname,
+                    'provider' => 'github',
+                    'provider_id' => $socialiteUser->id
+                ]
+            );
+        }
+        Auth::login($user);
     }
 }

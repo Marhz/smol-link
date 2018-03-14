@@ -46,6 +46,16 @@ class GithubLoginTest extends TestCase
         $this->assertEquals($this->sampleUser()['id'], $user->fresh()->provider_id);
     }
     
+    /**
+     * @test
+     */
+    function it_handles_wrong_credentials()
+    {
+        $this->get('auth/github/callback?code=fake')
+            ->assertRedirect()
+            ->assertSessionHas('flash');
+    }
+    
     protected function successResponse($overrides = [])
     {
         Socialite::shouldReceive('driver->user')->andReturn((object) $this->sampleUser($overrides));
