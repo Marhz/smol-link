@@ -28,3 +28,6 @@ Route::get('/register/confirm', 'Auth\EmailConfirmationController@index');
 Route::get('/api/{url}/visits', 'StatsController@getVisits')->name('api.url.stats');
 Route::put('/api/{url}/update', 'UrlController@update')->name('url.update');
 Route::get('/api/urls', 'DashboardController@getUrls');
+
+Route::get('auth/github', 'Auth\GithubLoginController@redirectToProvider');
+Route::get('auth/github/callback', 'Auth\GithubLoginController@handleCallback');
