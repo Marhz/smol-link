@@ -68,7 +68,7 @@ export default {
 				labels: this.durationConfig.labelsDisplayFunc(this.labels),
 				datasets: [{
 					label: 'Visits',
-					backgroundColor: '#f87979',
+					backgroundColor: '#f87979BC',
 					data: this.visitsFormatted
 				}]
 			}

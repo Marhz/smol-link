@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Laravel\Horizon\Horizon;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +16,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+        Horizon::auth(function ($request) {
+            if (auth()->check() && auth()->user()->horizon) {
+                return true;
+            }
+            abort(403);
+        });
     }
 
     /**

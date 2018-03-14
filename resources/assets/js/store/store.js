@@ -4,7 +4,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-	strict: true,
+	strict: process.env.NODE_ENV !== 'production',
 	state: {
 		urls: [],
 		visits: {}
