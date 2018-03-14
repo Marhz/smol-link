@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('provider')->nullable()->default(null);
             $table->string('provider_id')->nullable()->default(null)->unique();
             $table->string('confirmation_token')->nullable();
+            $table->boolean('horizon')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

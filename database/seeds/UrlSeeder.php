@@ -13,7 +13,7 @@ class UrlSeeder extends Seeder
      */
     public function run()
     {
-        $user = factory('App\User')->create(['email' => 'test@mail.com', 'password' => bcrypt("azerty")]);
+        $user = factory('App\User')->create(['email' => 'test@mail.com', 'password' => bcrypt("azerty"), 'horizon' => 1]);
         $urls = factory('App\Url', 25)->create(['user_id' => $user->id]);
         foreach ($urls as $url) {
             $visitCount = rand(0, 150);
