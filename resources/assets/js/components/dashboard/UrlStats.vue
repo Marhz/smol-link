@@ -42,14 +42,14 @@
 			<div class="col-md-6 col-12">
 				<h3>Countries Chart</h3>
 				<pie-chart-container
-					:countries="countriesData"
+					:items="countriesData"
 					:options="{responsive: true, maintainAspectRatio: false}"				
 				/>
 			</div>
 			<div class="col-md-6 col-12">
 				<h3>Referrers Chart</h3>
 				<pie-chart-container
-					:countries="referrersData"
+					:items="referrersData"
 					:options="{responsive: true, maintainAspectRatio: false}"				
 				/>
 			</div>			
@@ -81,7 +81,7 @@ export default {
 	},
 
 	watch: {
-		'$route.params.slug': function () {
+		url: function () {
 			this.period = "day";
 			this.getStats();
 			this.editUrl.slug = this.url.slug;
@@ -116,7 +116,12 @@ export default {
 			this.editing = false;
 			this.editUrl.slug = this.url.slug;
 			this.editUrl.label = this.url.label;
-		}
+		},
+		formatData(acc, item) {
+			(Object.keys(acc).includes(item)) ? acc[item]++ : acc[item] = 1;
+			return acc
+		},
+		dataToArray: (key, nullReplacement) => item => (item[key] === null) ? nullReplacement : item[key]
 	},
 	computed: {
 		visitsData() {
@@ -124,18 +129,10 @@ export default {
 			return this.$store.getters.visitsData(this.$route.params.slug)
 		},
 		referrersData() {
-			return this.visitsData.map(visit => {
-				if (visit.referrer === null)
-					return 'Direct link'
-				return visit.referrer
-			});
+			return this.visitsData.map(this.dataToArray('referrer', 'Direct link')).reduce(this.formatData, {});
 		},
 		countriesData() {
-			return this.visitsData.map(visit => {
-				if (visit.country === null)
-					return 'Unknown';
-				return visit.country;
-			});
+			return this.visitsData.map(this.dataToArray('country', 'Unknown')).reduce(this.formatData, {});
 		},
 		...mapGetters(['visits']),
 	}

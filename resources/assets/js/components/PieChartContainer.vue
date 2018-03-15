@@ -14,9 +14,9 @@ export default {
     components: { PieChart },
     props: {
         options: Object,
-        countries: {
-            type: Array,
-            default: () => []
+        items: {
+            type: Object,
+            default: () => {}
         }
     },
     data() {
@@ -40,7 +40,7 @@ export default {
         this.why = this.chartData;
     },
     watch: {
-        countries: function() {
+        items: function() {
             this.why = this.chartData;
         },
     },
@@ -50,24 +50,15 @@ export default {
                 labels: this.labels,
                 datasets: [{
                     backgroundColor: this.backgroundColors,
-                    data: this.countriesData
+                    data: this.values
                 }]
             }
         },
-        countriesData() {
-            return this.labels.map(label => {
-                return this.countries.filter(c => c === label).length
-            })
+        values() {
+            return Object.values(this.items).sort((a, b) => a < b ? 1 : -1);
         },
         labels() {
-            const obj = this.countries.reduce((acc, country) => {
-                if (Object.keys(acc).includes(country))
-                    acc[country]++
-                else
-                    acc[country] = 1;
-                return acc
-            }, {})
-            return Object.keys(obj).sort((a, b) => obj[a] < obj[b] ? 1 : -1);
+            return Object.keys(this.items).sort((a, b) => this.items[a] < this.items[b] ? 1 : -1);
         },
         backgroundColors() {
             return this.labels.map((label, i) => this.colors[i % this.colors.length])

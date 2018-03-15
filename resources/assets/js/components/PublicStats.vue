@@ -24,7 +24,7 @@ export default {
 
     data() {
         return {
-            period: 'day'
+            period: 'week'
         }
     },
 
