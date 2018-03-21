@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Smol-l.ink')</title>
+    <title>@yield('title', 'Smoll.ink')</title>
 
     <!-- Styles -->
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
@@ -32,7 +32,7 @@
             <v-alert message="{{ session('flash') }}"></v-alert>
         @endif
         <b-navbar toggleable="md" type="dark" variant="info" v-cloak>
-            <b-navbar-brand href="/">Smol-l.ink</b-navbar-brand>
+            <b-navbar-brand href="/">Smoll.ink</b-navbar-brand>
             <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
             <b-collapse is-nav id="nav_collapse">
                 <b-navbar-nav>

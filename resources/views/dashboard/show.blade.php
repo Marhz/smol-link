@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-	Smol-l.ink - Dashboard
+	Smoll.ink - Dashboard
 @endsection
 
 @section('content')

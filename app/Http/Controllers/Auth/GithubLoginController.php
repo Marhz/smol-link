@@ -33,6 +33,7 @@ class GithubLoginController extends Controller
         if ($user = User::whereNull('provider_id')->where('email', $socialiteUser->email)->first()) {
             $user->provider = 'github';
             $user->provider_id = $socialiteUser->id;
+            $user->confirmation_token = null;
             $user->save();
         } else {
             $user = User::firstOrCreate(
