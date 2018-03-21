@@ -13,7 +13,7 @@ export default new Vuex.Store({
 		urls: (state) => state.urls,
 		visits: (state) => state.visits,
 		visitsData: (state, getters) => (slug) => {
-			return getters.visits[slug]
+			return getters.visits[slug] || []
 		},
 	},
 	actions: {

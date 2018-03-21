@@ -71,7 +71,7 @@ export default {
 
 	data() {
 		return {
-			period: 'day',
+			period: 'week',
 			editing: true,
 			editUrl: {
 				slug: '',
@@ -82,19 +82,20 @@ export default {
 
 	watch: {
 		url: function () {
-			this.period = "day";
-			this.getStats();
-			this.editUrl.slug = this.url.slug;
-			this.editUrl.label = this.url.label;
+			this.init();
 		},
 	},
 	mounted() {
-		this.editUrl.slug = this.url.slug;
-		this.editUrl.label = this.url.label;
-		this.getStats();
+		this.init();
 	},
 
 	methods: {
+		init() {
+			this.period = "week";
+			this.editUrl.slug = this.url.slug;
+			this.editUrl.label = this.url.label;
+			this.getStats();
+		},
 		getStats() {
 			this.$store.dispatch('getVisits', { urlSlug: this.$route.params.slug, period: this.period });
 		},
@@ -117,31 +118,22 @@ export default {
 			this.editUrl.slug = this.url.slug;
 			this.editUrl.label = this.url.label;
 		},
-		formatData(acc, item) {
-			(Object.keys(acc).includes(item)) ? acc[item]++ : acc[item] = 1;
+		formatDataForPieChart: (key, nullReplacement) => (acc, item) => {
+			item = item[key] || nullReplacement;
+			(acc.hasOwnProperty(item)) ? acc[item]++ : acc[item] = 1;
 			return acc
 		},
-		dataToArray: (key, nullReplacement) => item => (item[key] === null) ? nullReplacement : item[key]
 	},
 	computed: {
 		visitsData() {
-			return this.visits[this.$route.params.slug] || [];
 			return this.$store.getters.visitsData(this.$route.params.slug)
 		},
 		referrersData() {
-			return this.visitsData.map(this.dataToArray('referrer', 'Direct link')).reduce(this.formatData, {});
+			return this.visitsData.reduce(this.formatDataForPieChart('referrer', 'Direct link'), {});
 		},
 		countriesData() {
-			return this.visitsData.map(this.dataToArray('country', 'Unknown')).reduce(this.formatData, {});
+			return this.visitsData.reduce(this.formatDataForPieChart('country', 'Unknown'), {});
 		},
-		...mapGetters(['visits']),
 	}
 }
 </script>
-
-<style scoped>
-	.graph-container {
-		position: relative;
-		height: 400px;
-	}
-</style>

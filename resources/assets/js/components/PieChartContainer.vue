@@ -23,7 +23,6 @@ export default {
         return {
             why: [],
             colors: [
-                '#3C1642',
                 '#086375',
                 '#90BE6D',
                 '#EA9010',
@@ -55,10 +54,10 @@ export default {
             }
         },
         values() {
-            return Object.values(this.items).sort((a, b) => a < b ? 1 : -1);
+            return Object.values(this.items).sort((a, b) => b - a);
         },
         labels() {
-            return Object.keys(this.items).sort((a, b) => this.items[a] < this.items[b] ? 1 : -1);
+            return Object.keys(this.items).sort((a, b) => this.items[b] - this.items[a]);
         },
         backgroundColors() {
             return this.labels.map((label, i) => this.colors[i % this.colors.length])

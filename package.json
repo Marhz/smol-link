@@ -11,15 +11,17 @@
     },
     "devDependencies": {
         "axios": "^0.17",
-        "popper.js": "^1.12",
         "cross-env": "^5.1",
         "laravel-mix": "^2.0",
         "lodash": "^4.17.4",
+        "popper.js": "^1.12",
         "vue": "^2.5.7"
     },
     "dependencies": {
+        "bootstrap": "^4.0.0",
         "bootstrap-vue": "^2.0.0-rc.1",
         "chart.js": "^2.7.1",
+        "laravel-mix-purgecss": "^1.0.5",
         "moment": "^2.20.1",
         "vue-chartjs": "^3.2.1",
         "vue-router": "^3.0.1",

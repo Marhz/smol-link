@@ -75,18 +75,14 @@ export default {
 		},
 		visitsFormatted() {
 			const visits = this.visits.map(visit => moment(visit.created_at))
-			.filter(visit => {
-				return (visit > moment().subtract(1, this.period).add(1, 'hour'))
-			}).reduce((acc, visit) => {
-				let format = visit[this.durationConfig.visitsFormattingFunc]();
-				if (Object.keys(acc).includes(format.toString())) {
-					acc[format]++;
-				} else {
-					acc[format] = 1;
-				}
-				return acc;
+				.filter(visit => {
+					return (visit > moment().subtract(1, this.period).add(1, 'hour'))
+				}).reduce((acc, visit) => {
+					let format = visit[this.durationConfig.visitsFormattingFunc]();				
+					(acc.hasOwnProperty(format.toString())) ? acc[format]++ : acc[format] = 1;
+					return acc;
 				}, {});
-			return this.labels.map(label => (Object.keys(visits).includes(label.toString())) ? visits[label] : 0)
+			return this.labels.map(label => visits[label] || 0)
 		},
 		labels() {
 			return new Array(this.durationConfig.labelsCount).fill(null)
